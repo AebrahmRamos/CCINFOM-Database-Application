@@ -1,49 +1,39 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class Room {
     private int roomID;
     private String roomType;
-    private boolean availability;
-    private int patientID;
-    private String maintenanceSchedule;
+    private Boolean isAvailable;
+    private LocalDate lastMaintenanceDate;
 
-    public Room(int roomID, String roomType, boolean availability, int patientID, String maintenanceSchedule) {
+    public Room (int roomID, String roomType, Boolean isAvailable, LocalDate lastMaintenanceDate) {
         this.roomID = roomID;
         this.roomType = roomType;
-        this.availability = availability;
-        this.patientID = patientID;
-        this.maintenanceSchedule = maintenanceSchedule;
+        this.isAvailable = isAvailable;
+        this.lastMaintenanceDate = lastMaintenanceDate;
     }
 
-    public void saveRoom(Connection connection) {
-        String sql = "INSERT INTO Room (roomID, roomType, availability, patientID, maintenanceSchedule) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, this.roomID);
-            pstmt.setString(2, this.roomType);
-            pstmt.setBoolean(3, this.availability);
-            pstmt.setInt(4, this.patientID);
-            pstmt.setString(5, this.maintenanceSchedule);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public int getRoomID() {
+        return roomID;
     }
 
-    public static void getRoomDetails(int roomID, Connection connection) {
-        String sql = "SELECT * FROM Room WHERE roomID = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, roomID);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                System.out.println("Room Type: " + rs.getString("roomType"));
-                System.out.println("Availability: " + rs.getBoolean("availability"));
-                // Additional fields can be fetched similarly
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void setRoomID(int roomID) {
+        this.roomID = roomID;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public Boolean getIsAvailable() {
+        return isAvailable;
+    }
+
+    public void setIsAvailable(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 }

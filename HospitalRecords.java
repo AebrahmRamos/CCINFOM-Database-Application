@@ -1,29 +1,29 @@
 public class HospitalRecords {
-    private PatientRecords patientRecords;
-    private DoctorRecords doctorRecords;
-    private AppointmentRecords appointmentRecords;
-    private RoomRecords roomRecords;
+    private patientRecords patientRecords;
+    private doctorRecords doctorRecords;
+    private appointmentRecords appointmentRecords;
+    private roomRecords roomRecords;
 
     public HospitalRecords() {
-        this.patientRecords = new PatientRecords();
-        this.doctorRecords = new DoctorRecords();
-        this.appointmentRecords = new AppointmentRecords();
-        this.roomRecords = new RoomRecords();
+        this.patientRecords = new patientRecords();
+        this.doctorRecords = new doctorRecords();
+        this.appointmentRecords = new appointmentRecords();
+        this.roomRecords = new roomRecords();
     }
 
-    public PatientRecords getPatientRecords() {
+    public patientRecords getPatientRecords() {
         return patientRecords;
     }
 
-    public DoctorRecords getDoctorRecords() {
+    public doctorRecords getDoctorRecords() {
         return doctorRecords;
     }
 
-    public AppointmentRecords getAppointmentRecords() {
+    public appointmentRecords getAppointmentRecords() {
         return appointmentRecords;
     }
 
-    public RoomRecords getRoomRecords() {
+    public roomRecords getRoomRecords() {
         return roomRecords;
     }
 }

@@ -1,3 +1,6 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Driver {
@@ -33,9 +36,34 @@ public class Driver {
                 case 5:
                     System.out.println("Exiting...");
                     return;
+                case 6:
+                    System.out.println("This is a test case");
+                    testAzureSQLConnection();
+                    break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
+        }
+    }
+
+    private static void testAzureSQLConnection() {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        String connectionUrl = "jdbc:sqlserver://ccinfo-106.database.windows.net:1433;database=CCINFOM-DB-Application;user=aebrahm@ccinfo-106;password=Cci1nfompassword!;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+
+        try (Connection con = DriverManager.getConnection(connectionUrl)) {
+            if (con != null) {
+                System.out.println("Connected to the Azure SQL Server successfully.");
+            } else {
+                System.out.println("Failed to connect to the Azure SQL Server.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
