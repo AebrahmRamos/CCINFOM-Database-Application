@@ -1,0 +1,14 @@
+{
+    "mysqlOptions": {
+      "authProtocol": "default",
+      "enableSsl": "Disabled"
+    },
+    "previewLimit": 50,
+    "server": "localhost",
+    "port": 3306,
+    "driver": "MySQL",
+    "name": "CCINFOM-DB_APP-DB",
+    "database": "CCINFOM-DB_APP-DB",
+    "username": "CCINFOM-DB_APP-DB",
+    "password": ""
+  }

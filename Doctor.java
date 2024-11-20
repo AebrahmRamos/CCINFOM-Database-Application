@@ -1,16 +1,16 @@
 public class Doctor {
     private int doctorID;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private String specialization;
-    private String department;
+    private String deparmtent;
 
-    public Doctor(int doctorID, String firstName, String lastName, String specialization, String department) {
+    public Doctor(int doctorID, String firstname, String lastname, String specialization, String deparmtent) {
         this.doctorID = doctorID;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.specialization = specialization;
-        this.department = department;
+        this.deparmtent = deparmtent;
     }
 
     public int getDoctorID() {
@@ -21,20 +21,20 @@ public class Doctor {
         this.doctorID = doctorID;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getSpecialization() {
@@ -45,11 +45,12 @@ public class Doctor {
         this.specialization = specialization;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getDeparmtent() {
+        return deparmtent;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setDeparmtent(String deparmtent) {
+        this.deparmtent = deparmtent;
     }
+
 }

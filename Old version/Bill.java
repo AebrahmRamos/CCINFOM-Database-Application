@@ -1,17 +1,18 @@
 import java.time.LocalDate;
+
 public class Bill {
     private int billID;
-    private int admissionID;
     private int patientID;
+    private int admissionID;
     private LocalDate billDate;
     private double totalAmount;
     private String paymentStatus;
     private String paymentMethod;
 
-    public Bill(int billID, int admissionID, int patientID, LocalDate billDate, double totalAmount, String paymentStatus, String paymentMethod) {
+    public Bill(int billID, int patientID, int admissionID, LocalDate billDate, double totalAmount, String paymentStatus, String paymentMethod) {
         this.billID = billID;
-        this.admissionID = admissionID;
         this.patientID = patientID;
+        this.admissionID = admissionID;
         this.billDate = billDate;
         this.totalAmount = totalAmount;
         this.paymentStatus = paymentStatus;
@@ -26,20 +27,20 @@ public class Bill {
         this.billID = billID;
     }
 
-    public int getAdmissionID() {
-        return admissionID;
-    }
-
-    public void setAdmissionID(int admissionID) {
-        this.admissionID = admissionID;
-    }
-
     public int getPatientID() {
         return patientID;
     }
 
     public void setPatientID(int patientID) {
         this.patientID = patientID;
+    }
+
+    public int getAdmissionID() {
+        return admissionID;
+    }
+
+    public void setAdmissionID(int admissionID) {
+        this.admissionID = admissionID;
     }
 
     public LocalDate getBillDate() {
@@ -73,5 +74,4 @@ public class Bill {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-
 }

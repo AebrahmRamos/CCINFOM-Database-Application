@@ -1,18 +1,21 @@
 import java.time.LocalDateTime;
+
 public class Appointment {
     private int appointmentID;
     private int patientID;
     private int doctorID;
-    private LocalDateTime appointmentTime;
+    private int roomID;
+    private LocalDateTime appointmentDateTime;
     private String status;
     private String appointmentType;
-    private String priority;
+    private int priority;
 
-    public Appointment(int appointmentID, int patientID, int doctorID, LocalDateTime appointmentTime, String status, String appointmentType, String priority) {
+    public Appointment(int appointmentID, int patientID, int doctorID, int roomID, LocalDateTime appointmentDateTime, String status, String appointmentType, int priority) {
         this.appointmentID = appointmentID;
         this.patientID = patientID;
         this.doctorID = doctorID;
-        this.appointmentTime = appointmentTime;
+        this.roomID = roomID;
+        this.appointmentDateTime = appointmentDateTime;
         this.status = status;
         this.appointmentType = appointmentType;
         this.priority = priority;
@@ -42,12 +45,20 @@ public class Appointment {
         this.doctorID = doctorID;
     }
 
-    public LocalDateTime getAppointmentTime() {
-        return appointmentTime;
+    public int getRoomID() {
+        return roomID;
     }
 
-    public void setAppointmentTime(LocalDateTime appointmentTime) {
-        this.appointmentTime = appointmentTime;
+    public void setRoomID(int roomID) {
+        this.roomID = roomID;
+    }
+
+    public LocalDateTime getAppointmentDateTime() {
+        return appointmentDateTime;
+    }
+
+    public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
+        this.appointmentDateTime = appointmentDateTime;
     }
 
     public String getStatus() {
@@ -66,11 +77,11 @@ public class Appointment {
         this.appointmentType = appointmentType;
     }
 
-    public String getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 }

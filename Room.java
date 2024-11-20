@@ -1,16 +1,15 @@
 import java.time.LocalDate;
-
 public class Room {
     private int roomID;
-    private String roomType;
-    private Boolean isAvailable;
-    private LocalDate lastMaintenanceDate;
+    private String roomName;
+    private Boolean isOccupied;
+    private LocalDate lastMaintenance;
 
-    public Room (int roomID, String roomType, Boolean isAvailable, LocalDate lastMaintenanceDate) {
+    public Room(int roomID, String roomName, Boolean isOccupied, LocalDate lastMaintenance) {
         this.roomID = roomID;
-        this.roomType = roomType;
-        this.isAvailable = isAvailable;
-        this.lastMaintenanceDate = lastMaintenanceDate;
+        this.roomName = roomName;
+        this.isOccupied = isOccupied;
+        this.lastMaintenance = lastMaintenance;
     }
 
     public int getRoomID() {
@@ -21,19 +20,27 @@ public class Room {
         this.roomID = roomID;
     }
 
-    public String getRoomType() {
-        return roomType;
+    public String getRoomName() {
+        return roomName;
     }
 
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
-    public Boolean getIsAvailable() {
-        return isAvailable;
+    public Boolean getIsOccupied() {
+        return isOccupied;
     }
 
-    public void setIsAvailable(Boolean isAvailable) {
-        this.isAvailable = isAvailable;
+    public void setIsOccupied(Boolean isOccupied) {
+        this.isOccupied = isOccupied;
+    }
+
+    public LocalDate getLastMaintenance() {
+        return lastMaintenance;
+    }
+
+    public void setLastMaintenance(LocalDate lastMaintenance) {
+        this.lastMaintenance = lastMaintenance;
     }
 }

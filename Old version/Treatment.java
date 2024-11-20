@@ -1,16 +1,18 @@
 import java.time.LocalDate;
+
 public class Treatment {
-    private int treatmentID;
+    private int treamentID;
     private int patientID;
     private int doctorID;
     private int roomID;
     private LocalDate admissionDate;
     private String treatmentType;
     private String description;
-    private Double cost;
+    private double cost;
 
-    public Treatment(int treatmentID, int patientID, int doctorID, int roomID, LocalDate admissionDate, String treatmentType, String description, Double cost) {
-        this.treatmentID = treatmentID;
+
+    public Treatment(int treamentID, int patientID, int doctorID, int roomID, LocalDate admissionDate, String treatmentType, String description, double cost) {
+        this.treamentID = treamentID;
         this.patientID = patientID;
         this.doctorID = doctorID;
         this.roomID = roomID;
@@ -21,11 +23,11 @@ public class Treatment {
     }
 
     public int getTreatmentID() {
-        return treatmentID;
+        return treamentID;
     }
 
     public void setTreatmentID(int treatmentID) {
-        this.treatmentID = treatmentID;
+        this.treamentID = treatmentID;
     }
 
     public int getPatientID() {
@@ -76,13 +78,12 @@ public class Treatment {
         this.description = description;
     }
 
-    public Double getCost() {
+    public double getCost() {
         return cost;
     }
 
-    public void setCost(Double cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
-
 
 }

@@ -1,14 +1,14 @@
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Maintenance {
     private int maintenanceID;
     private int roomID;
-    private LocalDateTime scheduleDate;
-    private LocalDateTime completionDate;
+    private LocalDate scheduleDate;
+    private LocalDate completionDate;
     private String status;
     private String notes;
 
-    public Maintenance(int maintenanceID, int roomID, LocalDateTime scheduleDate, LocalDateTime completionDate, String status, String notes) {
+    public Maintenance(int maintenanceID, int roomID, LocalDate scheduleDate, LocalDate completionDate, String status, String notes) {
         this.maintenanceID = maintenanceID;
         this.roomID = roomID;
         this.scheduleDate = scheduleDate;
@@ -33,19 +33,19 @@ public class Maintenance {
         this.roomID = roomID;
     }
 
-    public LocalDateTime getScheduleDate() {
+    public LocalDate getScheduleDate() {
         return scheduleDate;
     }
 
-    public void setScheduleDate(LocalDateTime scheduleDate) {
+    public void setScheduleDate(LocalDate scheduleDate) {
         this.scheduleDate = scheduleDate;
     }
 
-    public LocalDateTime getCompletionDate() {
+    public LocalDate getCompletionDate() {
         return completionDate;
     }
 
-    public void setCompletionDate(LocalDateTime completionDate) {
+    public void setCompletionDate(LocalDate completionDate) {
         this.completionDate = completionDate;
     }
 

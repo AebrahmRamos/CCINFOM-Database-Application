@@ -1,19 +1,19 @@
 import java.time.LocalDate;
+
 public class Admission {
     private int admissionID;
     private int patientID;
     private int roomID;
-    private int doctorID;
     private LocalDate admissionDate;
-    private String admissionType;
+    private String admission_type;
     private String status;
 
-    public Admission(int admissionID, int patientID, int roomID, LocalDate admissionDate, String admissionType, String status) {
+    public Admission(int admissionID, int patientID, int roomID, LocalDate admissionDate, String admission_type, String status) {
         this.admissionID = admissionID;
         this.patientID = patientID;
         this.roomID = roomID;
         this.admissionDate = admissionDate;
-        this.admissionType = admissionType;
+        this.admission_type = admission_type;
         this.status = status;
     }
 
@@ -41,14 +41,6 @@ public class Admission {
         this.roomID = roomID;
     }
 
-    public int getDoctorID() {
-        return doctorID;
-    }
-
-    public void setDoctorID(int doctorID) {
-        this.doctorID = doctorID;
-    }
-
     public LocalDate getAdmissionDate() {
         return admissionDate;
     }
@@ -58,11 +50,11 @@ public class Admission {
     }
 
     public String getAdmissionType() {
-        return admissionType;
+        return admission_type;
     }
 
-    public void setAdmissionType(String admissionType) {
-        this.admissionType = admissionType;
+    public void setAdmissionType(String admission_type) {
+        this.admission_type = admission_type;
     }
 
     public String getStatus() {
@@ -72,4 +64,6 @@ public class Admission {
     public void setStatus(String status) {
         this.status = status;
     }
+
+
 }
