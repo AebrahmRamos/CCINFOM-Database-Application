@@ -1,7 +1,7 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+// import java.sql.PreparedStatement;
+// import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class HospitalManagementDB {
@@ -14,19 +14,15 @@ public class HospitalManagementDB {
     private static Connection connection;
 
     public static Connection getConnection() {
-        if (connection == null) {
-            try {
-                // Load the MySQL JDBC driver
-                Class.forName("com.mysql.cj.jdbc.Driver"); 
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.err.println("Error connecting to the database: " + e.getMessage());
+            e.printStackTrace(); 
 
-                // Establish the connection
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("Connected to the database!");
-            } catch (ClassNotFoundException | SQLException e) {
-                System.err.println("Error connecting to the database: " + e.getMessage());
-            }
+            return null; // Or handle the error appropriately
         }
-        return connection;
     }
 
     public static void closeConnection() {

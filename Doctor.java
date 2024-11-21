@@ -21,7 +21,7 @@ public class Doctor {
         this.doctorID = doctorID;
     }
 
-    public String getFirstname() {
+    public String getFirstName() {
         return firstname;
     }
 
@@ -29,7 +29,7 @@ public class Doctor {
         this.firstname = firstname;
     }
 
-    public String getLastname() {
+    public String getLastName() {
         return lastname;
     }
 
@@ -45,11 +45,11 @@ public class Doctor {
         this.specialization = specialization;
     }
 
-    public String getDeparmtent() {
+    public String getDepartment() {
         return deparmtent;
     }
 
-    public void setDeparmtent(String deparmtent) {
+    public void setDepartment(String deparmtent) {
         this.deparmtent = deparmtent;
     }
 

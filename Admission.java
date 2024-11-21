@@ -8,10 +8,11 @@ public class Admission {
     private String admissionType;
     private String status;
 
-    public Admission(int admissionID, int patientID, int roomID, LocalDate admissionDate, String admissionType, String status) {
+    public Admission(int admissionID, int patientID, int roomID, int doctorID, LocalDate admissionDate, String admissionType, String status) {
         this.admissionID = admissionID;
         this.patientID = patientID;
         this.roomID = roomID;
+        this.doctorID = doctorID;
         this.admissionDate = admissionDate;
         this.admissionType = admissionType;
         this.status = status;
