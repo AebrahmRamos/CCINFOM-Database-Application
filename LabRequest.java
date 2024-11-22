@@ -6,13 +6,15 @@ public class LabRequest {
     private int doctorID;
     private int laboratoryID;
     private LocalDateTime labRequestDate;
+    private double cost;
 
-    public LabRequest(int labRequestID, int patientID, int doctorID, int laboratoryID, LocalDateTime labRequestDate) {
+    public LabRequest(int labRequestID, int patientID, int doctorID, int laboratoryID, LocalDateTime labRequestDate, double cost) {
         this.labRequestID = labRequestID;
         this.patientID = patientID;
         this.doctorID = doctorID;
         this.laboratoryID = laboratoryID;
         this.labRequestDate = labRequestDate;
+        this.cost = cost;
     }
 
     public int getLabRequestID() {
@@ -55,5 +57,11 @@ public class LabRequest {
         this.labRequestDate = labRequestDate;
     }
 
+    public double getCost() {
+        return this.cost;
+    }
 
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
 }
