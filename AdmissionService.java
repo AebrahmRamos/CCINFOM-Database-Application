@@ -30,11 +30,16 @@ public class AdmissionService {
             return;
         }
 
+        if (!isValidRoomType(roomType)) {
+            System.out.println("Invalid room type.");
+            return;
+        }
+
         Room room = null;
         if (admissionType.equalsIgnoreCase("in-patient")) {
             room = findAvailableRoom(roomType);
             if(room == null) {
-                System.out.println("No available " + roomType + " of room");
+                System.out.println("No available " + roomType + " room");
                 return;
             }
         }
@@ -65,8 +70,8 @@ public class AdmissionService {
     }
 
     private boolean isValidRoomType(String roomType) {
-        // Check roomdao and add valid room logic
-        return true;
+        List<String> roomTypes = List.of("Private", "Semi-Private", "Ward", "ICU");
+        return roomTypes.contains(roomType);
     }
 
     private Room findAvailableRoom(String roomType){
