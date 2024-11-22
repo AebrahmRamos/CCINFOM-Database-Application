@@ -1,5 +1,7 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -12,6 +14,7 @@ public class Driver {
     private DoctorDAO doctorDAO;
     private RoomDAO roomDAO;
     private LaboratoryDAO laboratoryDAO;
+    private TreatmentDAO treatmentDAO;
     private AdmissionService admissionService;
     private TreatmentService treatmentService;
     private LabRequestService labRequestService;
@@ -24,6 +27,7 @@ public class Driver {
         doctorDAO = new DoctorDAO();
         roomDAO = new RoomDAO();
         laboratoryDAO = new LaboratoryDAO();
+        treatmentDAO = new TreatmentDAO();
         admissionService = new AdmissionService();
         treatmentService = new TreatmentService();
         labRequestService = new LabRequestService();
@@ -77,7 +81,7 @@ public class Driver {
                 // handleAdmitCommand(parts);
                 break;
             case "treat":
-                // handleTreatCommand(parts);
+                handleTreatCommand(parts);
                 break;
             case "request":
                 // handleRequestCommand(parts);
@@ -129,6 +133,151 @@ public class Driver {
         }
     }
 
+    private void handleTreatCommand(String[] parts) {
+    	Scanner scanner = new Scanner(System.in);
+			if (parts.length != 2 ) {
+				System.out.println(INVALID_COMMAND_FORMAT + " Usage: treat <schedule/update>");
+			    return;
+			}
+			
+			String entity = parts[1];
+			switch (entity.toLowerCase()) {
+				case "schedule":
+					// ask the user for the patientID until valid
+			    	int patientID;
+			    	while (true) {
+			    		System.out.println("Enter Patient ID (or 0 to go back): ");
+			    		patientID = scanner.nextInt();
+			    		scanner.nextLine(); // consume newline
+			    		
+			    		// if input is 0, exits the function
+			    		if (patientID == 0) {
+			    			System.out.println("** Exitting command treat. **");
+			    			return; // exits the scheduling function
+			    		}
+			    		
+			    		Patient patient = patientDAO.getPatientByID(patientID);
+			    		if (patient != null) {
+			    			break; // exits loop if patient is found
+			    		} else {
+			    			System.out.println("Patient ID " + patientID + " does not exist. Please try again");
+			    		}
+			    	}
+			    	
+			    	// ask the user for the doctorID until valid
+			    	int doctorID;
+			    	while (true) {
+			    		System.out.println("Enter Doctor ID (or 0 to go back): ");
+			    		doctorID = scanner.nextInt();
+			    		scanner.nextLine(); // consume newline
+			    		
+			    		//if input is 0, exits the function
+			    		if (doctorID == 0) {
+			    			System.out.println("** Exitting command treat. **");
+			    			return; // exits the scheduling function
+			    		}
+			    		
+			    		Doctor doctor = doctorDAO.getDoctorByID(doctorID);
+			    		if (doctor != null) {
+			    			break; // exits loop if doctor is found
+			    		} else {
+			    			System.out.println("Doctor ID " + doctorID + " does not exist. Please try again.");
+			    		}
+			    	}
+			    	
+			    	// ask the user for the roomID until valid
+			    	int roomID;
+			    	while (true) {
+			    		System.out.println("Enter Room ID (or 0 to go back): ");
+			    		roomID = scanner.nextInt();
+			    		scanner.nextLine(); // consume newline
+			    		
+			    		//if input is 0, exits the function
+			    		if (roomID == 0) {
+			    			System.out.println("** Exitting command treat. **");
+			    			return; // exits the scheduling function
+			    		}
+			    		
+			    		Room room = roomDAO.getRoomByID(roomID);
+			    		if (room != null) {
+			    			break; // exits loop if room is found
+			    		} else {
+			    			System.out.println("Room ID " + roomID + " does not exist. Please try again.");
+			    		}
+			    	}
+			    	
+			    	// ask the user to input the admission date
+			    	LocalDate admissionDate;
+			    	while (true) {
+			    		System.out.println("Enter Admission Date (yyyy-MM-dd): ");
+			    		String dateInput = scanner.nextLine();
+			    		try {
+			    			admissionDate = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			    			break; // exit loop if date is valid
+			    		} catch (DateTimeParseException e) {
+			    			System.out.println("Invalid date format. Please enter the date in the format yyyy-MM-dd");
+			    		}
+			    	}
+			    	// ask the user to input the treatment type
+			    	System.out.println("Enter Treatment Type: ");
+			    	String treatmentType = scanner.nextLine();
+			    	
+			    	// ask the user to input description
+			    	System.out.println("Enter Description: ");
+			    	String description = scanner.nextLine();
+			    	
+			    	// ask the user to input cost
+			    	System.out.println("Enter Cost: ");
+			    	double cost = scanner.nextDouble();
+			    	scanner.nextLine(); // consume newline
+			    	
+			    	treatmentService.scheduleTreatment(patientID, doctorID, roomID, admissionDate, treatmentType, description, cost);
+			    	
+					break;
+					
+				case "update":
+					// ask the user to input a valid treatment id
+			    	int treatmentID;
+			    	while (true) {
+			    		System.out.println("Input a Treatment ID (or 0 to go back): ");
+			    		treatmentID = scanner.nextInt();
+			    		scanner.nextLine(); // consume newline
+			    		
+			    		// if input is 0 exits the function
+			    		if (treatmentID == 0) {
+			    			System.out.println("** Exitting command treat. **");
+			    			return; // exits the scheduling function
+			    		}
+			    		
+						Treatment treatment = treatmentDAO.getTreatmentByID(treatmentID);
+			    		if (treatment != null) {
+			    			break; // exits loop if treatment record is found
+			    		} else {
+			    			System.out.println("Treatment ID " + treatmentID + " does not exist. Please try again.");
+			    		}
+			    	}
+			    	// ask the user to update the treatment type
+			    	System.out.println("Enter Treatment Type: ");
+			    	treatmentType = scanner.nextLine();
+			    	
+			    	// ask the user to update description
+			    	System.out.println("Enter Description: ");
+			    	description = scanner.nextLine();
+			    	
+			    	// ask the user to update cost
+			    	System.out.println("Enter Cost: ");
+			    	cost = scanner.nextDouble();
+			    	scanner.nextLine(); // consume newline
+			    	
+			    	treatmentService.updateTreatment(treatmentID, treatmentType, description, cost);
+			    	
+					break;
+					
+				default:
+					System.out.println("Invalid entity type. Usage: treat <schedule/update>");
+			}
+    }
+    
     private void handleDischargeCommand(String[] parts) {
         if (parts.length == 2) {
             try {
