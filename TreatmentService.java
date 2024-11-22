@@ -45,15 +45,10 @@ public void scheduleTreatment(int patientID, int doctorID, int roomID, LocalDate
     	System.out.println("** Treatment scheduled successfully! **\n");
     }
 
-public void updateTreatment(int treatmentID, String treatmentType, String description, double cost) {
-    	System.out.println("** Update Treatment **");
+public void updateTreatment(int treatmentID, String treatmentType, String description, double cost, LocalDate admissionDate) {
 
     	// retrieve treatment record
     	Treatment treatment = treatmentDAO.getTreatmentByID(treatmentID);
-    	if (treatment == null) {
-    		System.out.println("Treatment ID record does not exist.");
-    		return; // if treatment record does not exist, exits function
-    	}
     	
     	// get bill info
     	Bill bill = billDAO.getBillByID(treatment.getPatientID());
@@ -65,6 +60,7 @@ public void updateTreatment(int treatmentID, String treatmentType, String descri
     	treatment.setTreatmentType(treatmentType);
     	treatment.setDescription(description);
     	treatment.setCost(cost);
+    	treatment.setAdmissionDate(admissionDate);
     	treatmentDAO.updateTreatment(treatment);
     		
     	// update the total cost from bill
