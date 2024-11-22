@@ -15,6 +15,7 @@ public class Driver {
     private RoomDAO roomDAO;
     private LaboratoryDAO laboratoryDAO;
     private TreatmentDAO treatmentDAO;
+    private LabRequestDAO labrequestDAO;
     private AdmissionService admissionService;
     private TreatmentService treatmentService;
     private LabRequestService labRequestService;
@@ -28,6 +29,7 @@ public class Driver {
         roomDAO = new RoomDAO();
         laboratoryDAO = new LaboratoryDAO();
         treatmentDAO = new TreatmentDAO();
+	labrequestDAO = new LabRequestDAO();
         admissionService = new AdmissionService();
         treatmentService = new TreatmentService();
         labRequestService = new LabRequestService();
@@ -269,7 +271,19 @@ public class Driver {
 			    	cost = scanner.nextDouble();
 			    	scanner.nextLine(); // consume newline
 			    	
-			    	treatmentService.updateTreatment(treatmentID, treatmentType, description, cost);
+			    	// ask the user to update the admissionDate
+			    	while (true) {
+			    		System.out.println("Update Admission Date (yyyy-MM-dd): ");
+			    		String dateInput = scanner.nextLine();
+			    		try {
+			    			admissionDate = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			    			break; // exit loop if date is valid
+			    		} catch (DateTimeParseException e) {
+			    			System.out.println("Invalid date format. Please enter the date in the format yyyy-MM-dd");
+			    		}
+			    	}
+			    	
+			    	treatmentService.updateTreatment(treatmentID, treatmentType, description, cost, admissionDate);
 			    	
 					break;
 					
