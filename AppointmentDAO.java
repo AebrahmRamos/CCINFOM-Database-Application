@@ -23,6 +23,11 @@ public class AppointmentDAO {
             statement.setString(7, appointment.getPriority());
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    appointment.setAppointmentID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating appointment: " + e.getMessage());
         }

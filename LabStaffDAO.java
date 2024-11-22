@@ -19,6 +19,7 @@ public class LabStaffDAO {
             statement.setString(4, labStaff.getShift());
 
             statement.executeUpdate();
+            // labStaff.();(generatedKeys.getInt(1));
         } catch (SQLException e) {
             System.err.println("Error creating lab staff: " + e.getMessage());
         }

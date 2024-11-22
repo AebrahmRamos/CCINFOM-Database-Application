@@ -19,6 +19,11 @@ public class DoctorDAO {
             statement.setString(4, doctor.getDepartment());
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    doctor.setDoctorID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating doctor: " + e.getMessage());
         }

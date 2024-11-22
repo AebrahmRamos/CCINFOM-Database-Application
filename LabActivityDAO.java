@@ -24,6 +24,11 @@ public class LabActivityDAO {
             statement.setString(7, labActivity.getStatus());
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    labActivity.setLabActivityID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating lab activity: " + e.getMessage());
         }
