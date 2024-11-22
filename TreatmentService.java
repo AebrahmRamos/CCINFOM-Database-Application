@@ -7,8 +7,6 @@
  */
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class TreatmentService {
@@ -16,16 +14,14 @@ public class TreatmentService {
 	private TreatmentDAO treatmentDAO;
 	private PatientDAO patientDAO;
 	private BillDAO billDAO;
-	private DoctorDAO doctorDAO;
-	private RoomDAO roomDAO;
+	private AdmissionDAO admissionDAO;
 	private Scanner scanner;
 	
 	public TreatmentService() {
 		this.treatmentDAO = new TreatmentDAO();
 		this.patientDAO = new PatientDAO();
 		this.billDAO = new BillDAO();
-		this.doctorDAO = new DoctorDAO();
-		this.roomDAO = new RoomDAO();
+		this.admissionDAO = new AdmissionDAO();
 		this.scanner = new Scanner(System.in);
 	}
 
@@ -52,61 +48,12 @@ public class TreatmentService {
     			System.out.println("Patient ID " + patientID + " does not exist. Please try again");
     		}
     	}
+    	// retrieve admission record to copy values over
+    	Admission admission = admissionDAO.getAdmissionById(patientID);
+    	int doctorID = admission.getDoctorID();
+    	int roomID = admission.getRoomID();
+    	LocalDate admissionDate = admission.getAdmissionDate();
     	
-    	// ask the user for the doctorID until valid
-    	int doctorID;
-    	while (true) {
-    		System.out.println("Enter Doctor ID (or 0 to go back): ");
-    		doctorID = scanner.nextInt();
-    		scanner.nextLine(); // consume newline
-    		
-    		//if input is 0, exits the function
-    		if (doctorID == 0) {
-    			System.out.println("** Going back to the main menu. **");
-    			return; // exits the scheduling function
-    		}
-    		
-    		Doctor doctor = doctorDAO.getDoctorByID(doctorID);
-    		if (doctor != null) {
-    			break; // exits loop if doctor is found
-    		} else {
-    			System.out.println("Doctor ID " + doctorID + " does not exist. Please try again.");
-    		}
-    	}
-    	
-    	// ask the user for the roomID until valid
-    	int roomID;
-    	while (true) {
-    		System.out.println("Enter Room ID (or 0 to go back): ");
-    		roomID = scanner.nextInt();
-    		scanner.nextLine(); // consume newline
-    		
-    		//if input is 0, exits the function
-    		if (roomID == 0) {
-    			System.out.println("** Going back to the main menu. **");
-    			return; // exits the scheduling function
-    		}
-    		
-    		Room room = roomDAO.getRoomByID(roomID);
-    		if (room != null) {
-    			break; // exits loop if room is found
-    		} else {
-    			System.out.println("Room ID " + roomID + " does not exist. Please try again.");
-    		}
-    	}
-    	
-    	// ask the user to input the admission date
-    	LocalDate admissionDate;
-    	while (true) {
-    		System.out.println("Enter Admission Date (yyyy-MM-dd): ");
-    		String dateInput = scanner.nextLine();
-    		try {
-    			admissionDate = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    			break; // exit loop if date is valid
-    		} catch (DateTimeParseException e) {
-    			System.out.println("Invalid date format. Please enter the date in the format yyyy-MM-dd");
-    		}
-    	}
     	// ask the user to input the treatment type
     	System.out.println("Enter Treatment Type: ");
     	String treatmentType = scanner.nextLine();
@@ -131,12 +78,39 @@ public class TreatmentService {
     		bill.setTotalAmount(cost + bill.getTotalAmount());
     		billDAO.updateBill(bill);
     		System.out.println("Existing bill updated for Patient ID: " + patientID + ". Added cost: " + cost);
+    	} else { // creates new bill if patient has none yet
+    		System.out.println("No existing bill found for Patient ID: " + patientID + ". Creating a new bill.");
+    		bill = new Bill(0, admission.getAdmissionID(), patientID, LocalDate.now(), cost, "Pending", "Cash");
+    		billDAO.createBill(bill);
     	}
     	
     	System.out.println("** Treatment scheduled successfully! **\n");
     }
 
-    public void updateTreatment(int treatmentID, String treatmentType, String description, double cost) {
+    public void updateTreatment() {
+    	System.out.println("** Update Treatment **");
+    	
+    	// ask the user to input a valid treatment id
+    	int treatmentID;
+    	while (true) {
+    		System.out.println("Input a Treatment ID (or 0 to go back): ");
+    		treatmentID = scanner.nextInt();
+    		scanner.nextLine(); // consume newline
+    		
+    		// if input is 0 exits the function
+    		if (treatmentID == 0) {
+    			System.out.println("** Going back to the main menu. **");
+    			return; // exits the scheduling function
+    		}
+    		
+    		Treatment treatment = treatmentDAO.getTreatmentByID(treatmentID);
+    		if (treatment != null) {
+    			break; // exits loop if treatment record is found
+    		} else {
+    			System.out.println("Treatment ID " + treatmentID + " does not exist. Please try again.");
+    		}
+    	}
+    	
     	
     	// retrieve treatment record
     	Treatment treatment = treatmentDAO.getTreatmentByID(treatmentID);
@@ -144,21 +118,29 @@ public class TreatmentService {
     	// get bill info
     	Bill bill = billDAO.getBillByID(treatment.getPatientID());
     	
+    	// subtract old cost from total bill
+    	bill.setTotalAmount(bill.getTotalAmount() - treatment.getCost());
+    	
     	// update treatment record
-    	if (treatment != null) {
-    		treatment.setTreatmentType(treatmentType);
-    		treatment.setDescription(description);
-    		treatment.setCost(cost);
-    		treatmentDAO.updateTreatment(treatment);
+    	// ask the user to input the treatment type
+    	System.out.println("Update Treatment Type: ");
+    	treatment.setTreatmentType(scanner.nextLine());
+    	
+    	// ask the user to input description
+    	System.out.println("Update Description: ");
+    	treatment.setDescription(scanner.nextLine());
+    	
+    	// ask the user to input cost
+    	System.out.println("Update Cost: ");
+    	treatment.setCost(scanner.nextDouble());
+    	scanner.nextLine(); // consume newline
+    	treatmentDAO.updateTreatment(treatment);
     		
-    		// update the total cost from bill
-    		bill.setTotalAmount(cost + bill.getTotalAmount());
-    		billDAO.updateBill(bill);
+    	// update the total cost from bill
+    	bill.setTotalAmount(treatment.getCost() + bill.getTotalAmount());
+    	billDAO.updateBill(bill);
     		
-    		System.out.println("Treatment updated successfully!\n");
-    	} else {
-    		System.out.println("Treatment ID not found.\n");
-    	}
+    	System.out.println("** Treatment updated successfully! **\n");
     }
 }
 
