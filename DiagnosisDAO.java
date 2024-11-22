@@ -23,6 +23,11 @@ public class DiagnosisDAO {
             statement.setString(6, diagnosis.getStatus());
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    diagnosis.setDiagnosisID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating diagnosis: " + e.getMessage());
         }

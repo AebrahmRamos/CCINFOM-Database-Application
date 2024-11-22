@@ -38,6 +38,11 @@ public class AdmissionDAO {
             statement.setString(6, admission.getStatus());
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    admission.setAdmissionID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating admission: " + e.getMessage());
         } // Connection automatically closed here

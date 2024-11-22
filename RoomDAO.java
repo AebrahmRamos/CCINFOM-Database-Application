@@ -20,6 +20,11 @@ public class RoomDAO {
             statement.setDouble(4, room.getCost()); // Include cost in insertion
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    room.setRoomID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating room: " + e.getMessage());
         }

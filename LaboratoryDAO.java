@@ -4,18 +4,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Statement;
 
 public class LaboratoryDAO {
 
     public void createLaboratory(Laboratory laboratory) {
         try (Connection connection = HospitalManagementDB.getConnection();
              PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO Laboratory (name, contactNumber) VALUES (?, ?)")) { 
+                     "INSERT INTO Laboratory (name, contactNumber) VALUES (?, ?)", 
+                     Statement.RETURN_GENERATED_KEYS)) { 
 
             statement.setString(1, laboratory.getLaboratoryName());
             statement.setString(2, laboratory.getContactNumber());
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    laboratory.setLaboratoryID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating laboratory: " + e.getMessage());
         }

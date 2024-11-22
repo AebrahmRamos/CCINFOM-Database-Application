@@ -58,10 +58,10 @@ public class DischargeService {
                 1,
                 admission.getAdmissionID(),
                 admission.getPatientID(),
-                LocalDate.now(), // or admission.getDischargeDate() if you have it
+                LocalDate.now(), 
                 totalCharges,
-                "Pending", // Initial payment status
-                "N/A" // Payment method not applicable yet
+                "Pending",
+                "N/A"
         );
 
         billDAO.createBill(finalBill);

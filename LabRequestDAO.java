@@ -22,6 +22,11 @@ public class LabRequestDAO {
             statement.setDouble(5, labRequest.getCost()); // Include cost in insertion
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    labRequest.setLabRequestID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating lab request: " + e.getMessage());
         }

@@ -23,6 +23,11 @@ public class BillDAO {
             statement.setString(6, bill.getPaymentMethod());
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    bill.setBillID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating bill: " + e.getMessage());
         }

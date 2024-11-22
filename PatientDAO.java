@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Date; 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,8 @@ public class PatientDAO {
     public void createPatient(Patient patient) {
         try (Connection connection = HospitalManagementDB.getConnection();
              PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO Patient (firstName, lastName, birthDate, HMO, medicalHistory) " +
-                             "VALUES (?, ?, ?, ?, ?)")) {
+                     "INSERT INTO Patient (firstName, lastName, birthDate, HMO, medicalHistory)", 
+                     Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, patient.getFirstName());
             statement.setString(2, patient.getLastName());
@@ -21,6 +22,11 @@ public class PatientDAO {
             statement.setString(5, patient.getMedicalHistory());
 
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    patient.setPatientID(generatedKeys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error creating patient: " + e.getMessage());
         }
