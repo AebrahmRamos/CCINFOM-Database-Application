@@ -277,6 +277,165 @@ public class Driver {
 					System.out.println("Invalid entity type. Usage: treat <schedule/update>");
 			}
     }
+
+    private void handleRequestCommand(String[] parts) {
+        Scanner scanner = new Scanner(System.in);
+        if (parts.length != 2) {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: request <schedule/update>");
+            return;
+        }
+
+        String action = parts[1];
+        switch (action.toLowerCase()) {
+            case "schedule":
+                // Ask the user for patientID until valid
+                int patientID;
+                while (true) {
+                    System.out.println("Enter Patient ID (or 0 to go back): ");
+                    patientID = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    if (patientID == 0) {
+                        System.out.println("** Exiting command request. **");
+                        return;
+                    }
+
+                    Patient patient = patientDAO.getPatientByID(patientID);
+                    if (patient != null) {
+                        break;
+                    } else {
+                        System.out.println("Patient ID " + patientID + " does not exist. Please try again.");
+                    }
+                }
+
+                // Ask the user for doctorID until valid
+                int doctorID;
+                while (true) {
+                    System.out.println("Enter Doctor ID (or 0 to go back): ");
+                    doctorID = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    if (doctorID == 0) {
+                        System.out.println("** Exiting command request. **");
+                        return;
+                    }
+
+                    Doctor doctor = doctorDAO.getDoctorByID(doctorID);
+                    if (doctor != null) {
+                        break;
+                    } else {
+                        System.out.println("Doctor ID " + doctorID + " does not exist. Please try again.");
+                    }
+                }
+
+                // Ask the user for laboratoryID until valid
+                int laboratoryID;
+                while (true) {
+                    System.out.println("Enter Laboratory ID (or 0 to go back): ");
+                    laboratoryID = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    if (laboratoryID == 0) {
+                        System.out.println("** Exiting command request. **");
+                        return;
+                    }
+
+                    Laboratory lab = laboratoryDAO.getLaboratoryByID(laboratoryID);
+                    if (lab != null) {
+                        break;
+                    } else {
+                        System.out.println("Laboratory ID " + laboratoryID + " does not exist. Please try again.");
+                    }
+                }
+
+                // Ask the user to input the lab request date
+                LocalDateTime labRequestDate;
+                while (true) {
+                    System.out.println("Enter Lab Request Date and Time (yyyy-MM-ddTHH:mm): ");
+                    String dateInput = scanner.nextLine();
+                    try {
+                        labRequestDate = LocalDateTime.parse(dateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+                        break; // Exit loop if date and time are valid
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Invalid date format. Please enter the date and time in the format yyyy-MM-ddTHH:mm.");
+                    }
+                }
+
+                // Ask the user to input the cost
+                System.out.println("Enter Cost: ");
+                double cost = scanner.nextDouble();
+                scanner.nextLine(); // Consume newline
+
+                labRequestService.createLabRequest(patientID, doctorID, laboratoryID, labRequestDate, cost);
+
+                break;
+
+            case "update":
+                // Ask the user for labRequestID until valid
+                int labRequestID;
+                while (true) {
+                    System.out.println("Enter Lab Request ID (or 0 to go back): ");
+                    labRequestID = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    if (labRequestID == 0) {
+                        System.out.println("** Exiting command request. **");
+                        return;
+                    }
+
+                    LabRequest labRequest = labrequestDAO.getLabRequestByID(labRequestID);
+                    if (labRequest != null) {
+                        break;
+                    } else {
+                        System.out.println("Lab Request ID " + labRequestID + " does not exist. Please try again.");
+                    }
+                }
+
+                // Ask the user to update the lab request date details
+                System.out.println("Enter New Lab Request Date and Time (yyyy-MM-ddTHH:mm): ");
+                String newDateInput = scanner.nextLine();
+                LocalDateTime newLabRequestDate;
+                try {
+                    newLabRequestDate = LocalDateTime.parse(newDateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+                } catch (DateTimeParseException e) {
+                    System.out.println("Invalid date format. Keeping the previous date.");
+                    newLabRequestDate = labrequestDAO.getLabRequestByID(labRequestID).getLabRequestDate();
+                }
+
+                // Ask the user to update the cost
+                System.out.println("Enter New Cost: ");
+                double newCost = scanner.nextDouble();
+                scanner.nextLine(); // Consume newline
+                
+                // Ask the user to update laboratoryID
+                while (true) {
+                    System.out.println("Update Laboratory ID (or 0 to go back): ");
+                    laboratoryID = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    if (laboratoryID == 0) {
+                        System.out.println("** Exiting command request. **");
+                        return;
+                    }
+
+                    Laboratory lab = laboratoryDAO.getLaboratoryByID(laboratoryID);
+                    if (lab != null) {
+                        break;
+                    } else {
+                        System.out.println("Laboratory ID " + laboratoryID + " does not exist. Please try again.");
+                    }
+                }
+                
+
+                labRequestService.updateLabRequest(labRequestID, laboratoryID, newLabRequestDate, newCost);
+
+                break;
+
+            default:
+                System.out.println("Invalid action type. Usage: request <schedule/update>");
+        }
+    }
+	
     
     private void handleDischargeCommand(String[] parts) {
         if (parts.length == 2) {
