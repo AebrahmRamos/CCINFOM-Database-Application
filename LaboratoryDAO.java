@@ -7,6 +7,7 @@ import java.util.List;
 import java.sql.Statement;
 
 public class LaboratoryDAO {
+    
 
     public void createLaboratory(Laboratory laboratory) {
         try (Connection connection = HospitalManagementDB.getConnection();

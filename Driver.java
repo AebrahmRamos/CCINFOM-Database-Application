@@ -14,28 +14,46 @@ public class Driver {
     private DoctorDAO doctorDAO;
     private RoomDAO roomDAO;
     private LaboratoryDAO laboratoryDAO;
+    private AdmissionDAO admissionDAO;
+    private AppointmentDAO appointmentDAO;
+    private BillDAO billDAO;
+    private DiagnosisDAO diagnosisDAO;
+    private DiseaseDAO diseaseDAO;
+    private LabActivityDAO labActivityDAO;
+    private LabRequestDAO labRequestDAO;
+    private LabStaffDAO labStaffDAO;
+    private MaintenanceDAO maintenanceDAO;
     private TreatmentDAO treatmentDAO;
-    private LabRequestDAO labrequestDAO;
     private AdmissionService admissionService;
     private TreatmentService treatmentService;
     private LabRequestService labRequestService;
     private DischargeService dischargeService;
     private LaboratoryProductivityReport labReport;
-    // ... (Add other service/report instances as needed)
 
+
+    
+
+    
     public Driver() {
         patientDAO = new PatientDAO();
         doctorDAO = new DoctorDAO();
         roomDAO = new RoomDAO();
         laboratoryDAO = new LaboratoryDAO();
+        admissionDAO = new AdmissionDAO();
+        appointmentDAO = new AppointmentDAO();
+        billDAO = new BillDAO();
+        diagnosisDAO = new DiagnosisDAO();
+        diseaseDAO = new DiseaseDAO();
+        labActivityDAO = new LabActivityDAO();
+        labRequestDAO = new LabRequestDAO();
+        labStaffDAO = new LabStaffDAO();
+        maintenanceDAO = new MaintenanceDAO();
         treatmentDAO = new TreatmentDAO();
-	labrequestDAO = new LabRequestDAO();
         admissionService = new AdmissionService();
         treatmentService = new TreatmentService();
         labRequestService = new LabRequestService();
         dischargeService = new DischargeService();
         labReport = new LaboratoryProductivityReport();
-        // ADD MISSING DAO'S
     }
 
     public static void main(String[] args) {
@@ -93,6 +111,9 @@ public class Driver {
                 break;
             case "generate":
                 handleGenerateCommand(parts);
+                break;
+            case "help":
+                handleHelpCommand(parts);
                 break;
             case "exit":
                 System.exit(0);
@@ -530,30 +551,133 @@ public class Driver {
         }
     }
 
-    private void handleReadCommand(String[] parts) {
-        if (parts.length < 2) {
-            System.out.println(INVALID_COMMAND_FORMAT + " Usage: read <entity>");
-            return;
-        }
-    
-        String entity = parts[1];
-        switch (entity.toLowerCase()) {
-            case "patient":
-                readAllPatients();
-                break;
-            case "doctor":
-                readAllDoctors();
-                break;
-            case "room":
-                readAllRooms();
-                break;
-            case "laboratory":
-                readAllLaboratories();
-                break;
-            default:
-                System.out.println("Invalid entity type.");
+    private void readPatient(int patientID) {
+        Patient patient = patientDAO.getPatientByID(patientID);
+        if (patient == null) {
+            System.out.println("Patient not found.");
+        } else {
+            System.out.println(patient);
         }
     }
+    
+    private void readDoctor(int doctorID) {
+        Doctor doctor = doctorDAO.getDoctorByID(doctorID);
+        if (doctor == null) {
+            System.out.println("Doctor not found.");
+        } else {
+            System.out.println(doctor);
+        }
+    }
+    
+    private void readRoom(int roomID) {
+        Room room = roomDAO.getRoomByID(roomID);
+        if (room == null) {
+            System.out.println("Room not found.");
+        } else {
+            System.out.println(room);
+        }
+    }
+    
+    private void readLaboratory(int laboratoryID) {
+        Laboratory laboratory = laboratoryDAO.getLaboratoryByID(laboratoryID);
+        if (laboratory == null) {
+            System.out.println("Laboratory not found.");
+        } else {
+            System.out.println(laboratory);
+        }
+    }
+    
+    private void readAdmission(int admissionID) {
+        Admission admission = AdmissionDAO.getAdmissionById(admissionID);
+        if (admission == null) {
+            System.out.println("Admission not found.");
+        } else {
+            System.out.println(admission);
+        }
+    }
+    
+    private void readAppointment(int appointmentID) {
+        Appointment appointment = appointmentDAO.getAppointmentById(appointmentID);
+        if (appointment == null) {
+            System.out.println("Appointment not found.");
+        } else {
+            System.out.println(appointment);
+        }
+    }
+    
+    private void readBill(int billID) {
+        Bill bill = billDAO.getBillByID(billID);
+        if (bill == null) {
+            System.out.println("Bill not found.");
+        } else {
+            System.out.println(bill);
+        }
+    }
+    
+    private void readDiagnosis(int diagnosisID) {
+        Diagnosis diagnosis = diagnosisDAO.getDiagnosisByID(diagnosisID);
+        if (diagnosis == null) {
+            System.out.println("Diagnosis not found.");
+        } else {
+            System.out.println(diagnosis);
+        }
+    }
+    
+    private void readDisease(int diseaseID) {
+        Disease disease = diseaseDAO.getDiseaseByID(diseaseID);
+        if (disease == null) {
+            System.out.println("Disease not found.");
+        } else {
+            System.out.println(disease);
+        }
+    }
+    
+    private void readLabActivity(int labActivityID) {
+        LabActivity labActivity = labActivityDAO.getLabActivityByID(labActivityID);
+        if (labActivity == null) {
+            System.out.println("Lab Activity not found.");
+        } else {
+            System.out.println(labActivity);
+        }
+    }
+    
+    private void readLabRequest(int labRequestID) {
+        LabRequest labRequest = labRequestDAO.getLabRequestByID(labRequestID);
+        if (labRequest == null) {
+            System.out.println("Lab Request not found.");
+        } else {
+            System.out.println(labRequest);
+        }
+    }
+    
+    private void readLabStaff(int labStaffID) {
+        LabStaff labStaff = labStaffDAO.getLabStaffByID(labStaffID);
+        if (labStaff == null) {
+            System.out.println("Lab Staff not found.");
+        } else {
+            System.out.println(labStaff);
+        }
+    }
+    
+    private void readMaintenance(int maintenanceID) {
+        Maintenance maintenance = maintenanceDAO.getMaintenanceByID(maintenanceID);
+        if (maintenance == null) {
+            System.out.println("Maintenance not found.");
+        } else {
+            System.out.println(maintenance);
+        }
+    }
+    
+    private void readTreatment(int treatmentID) {
+        Treatment treatment = treatmentDAO.getTreatmentByID(treatmentID);
+        if (treatment == null) {
+            System.out.println("Treatment not found.");
+        } else {
+            System.out.println(treatment);
+        }
+    }
+
+    
     
     private void readAllPatients() {
         List<Patient> patients = patientDAO.getAllPatients();
@@ -662,6 +786,92 @@ public class Driver {
         Laboratory laboratory = new Laboratory(1, name, contactNumber);
         laboratoryDAO.createLaboratory(laboratory);
         System.out.println("Laboratory created successfully with id " + laboratory.getLaboratoryID());
+    }
+
+    private void handleHelpCommand(String[] parts) {
+        if (parts.length == 1) {
+            // Show general help message with all available commands
+            System.out.println("Available commands:");
+            System.out.println("  create <entity> - Create a new entity (patient, doctor, room, laboratory)");
+            System.out.println("  read <entity> - Read all entities of a given type");
+            System.out.println("  update <entity> <id> - Update an existing entity");
+            System.out.println("  delete <entity> <id> - Delete an entity");
+            System.out.println("  admit <admissionType> <patientID> <roomID> <doctorID> <admissionDate> <status> - Admit a patient");
+            System.out.println("  treat <patientID> <doctorID> <treatmentDate> <treatmentType> <description> <cost> - Schedule a treatment");
+            System.out.println("  request <patientID> <doctorID> <laboratoryID> <requestDate> <cost> - Create a lab request");
+            System.out.println("  discharge <admissionID> - Discharge a patient");
+            System.out.println("  generate report <report_type> <arguments> - Generate a report");
+            System.out.println("  exit - Quit the program");
+            System.out.println("Type 'help <command>' for more information on a specific command.");
+    
+        } else if (parts.length == 2) {
+            String commandName = parts[1];
+            switch (commandName.toLowerCase()) {
+                case "create":
+                    System.out.println("Usage: create <entity> <data>");
+                    System.out.println("  Creates a new entity of the specified type.");
+                    System.out.println("  Supported entities: patient, doctor, room, laboratory");
+                    System.out.println("  Example: create patient John Doe 1990-01-01 HMO-A \"No allergies\"");
+                    break;
+                case "read":
+                    System.out.println("Usage: read <entity>");
+                    System.out.println("  Reads all entities of the specified type.");
+                    System.out.println("  Supported entities: patient, doctor, room, laboratory");
+                    System.out.println("  Example: read patient");
+                    break;
+                case "update":
+                    System.out.println("Usage: update <entity> <id> <data>");
+                    System.out.println("  Updates an existing entity with the given ID.");
+                    System.out.println("  Supported entities: patient, doctor, room, laboratory");
+                    System.out.println("  Example: update patient 1 Jane Doe 1990-01-01 HMO-A \"No allergies\"");
+                    break;
+                case "delete":
+                    System.out.println("Usage: delete <entity> <id>");
+                    System.out.println("  Deletes the entity with the given ID.");
+                    System.out.println("  Supported entities: patient, doctor, room, laboratory");
+                    System.out.println("  Example: delete patient 1");
+                    break;
+                case "admit":
+                    System.out.println("Usage: admit <admissionType> <patientID> <roomID> <doctorID> <admissionDate> <status>");
+                    System.out.println("  Admits a patient.");
+                    System.out.println("  admissionType: in-patient or out-patient");
+                    System.out.println("  Example: admit in-patient 1 101 5 2024-11-23 Admitted");
+                    break;
+                case "treat":
+                    System.out.println("Usage: treat <patientID> <doctorID> <treatmentDate> <treatmentType> <description> <cost>");
+                    System.out.println("  Schedules a treatment for a patient.");
+                    System.out.println("  Example: treat 1 5 2024-11-24 \"Check-up\" \"General check-up\" 100.00");
+                    break;
+                case "request":
+                    System.out.println("Usage: request <patientID> <doctorID> <laboratoryID> <requestDate> <cost>");
+                    System.out.println("  Creates a lab request for a patient.");
+                    System.out.println("  Example: request 1 5 1 2024-11-23 50.00");
+                    break;
+                case "discharge":
+                    System.out.println("Usage: discharge <admissionID>");
+                    System.out.println("  Discharges a patient.");
+                    System.out.println("  Example: discharge 123");
+                    break;
+                case "generate":
+                    System.out.println("Usage: generate report <report_type> <arguments>");
+                    System.out.println("  Generates a report of the specified type.");
+                    System.out.println("  Supported report types:");
+                    System.out.println("    disease-activity <month> <year>");
+                    System.out.println("    doctor-productivity <month> <year>");
+                    System.out.println("    er-productivity <month> <year>");
+                    System.out.println("    laboratory <month> <year>");
+                    System.out.println("  Example: generate report laboratory 11 2024");
+                    break;
+                case "exit":
+                    System.out.println("Usage: exit");
+                    System.out.println("  Quits the program.");
+                    break;
+                default:
+                    System.out.println("Invalid command name.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: help [command]");
+        }
     }
     
 }
