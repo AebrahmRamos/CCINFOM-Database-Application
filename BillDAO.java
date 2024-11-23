@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class BillDAO {
         try (Connection connection = HospitalManagementDB.getConnection();
              PreparedStatement statement = connection.prepareStatement(
                      "INSERT INTO Bill (admissionID, patientID, billDate, totalAmount, paymentStatus, paymentMethod) " +
-                             "VALUES (?, ?, ?, ?, ?, ?)")) {
+                             "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setInt(1, bill.getAdmissionID());
             statement.setInt(2, bill.getPatientID());

@@ -6,6 +6,8 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+// javac -cp lib/mysql-connector-j-8.0.33.jar:. Driver.java
+// java -cp lib/mysql-connector-j-8.0.33.jar:. Driver
 public class Driver {
 
     private static final String INVALID_COMMAND_FORMAT = "Invalid command format.";
@@ -114,6 +116,9 @@ public class Driver {
                 break;
             case "help":
                 handleHelpCommand(parts);
+                break;
+            case "list":
+                handleListCommand(parts);
                 break;
             case "exit":
                 System.exit(0);
@@ -418,7 +423,7 @@ public class Driver {
                         return;
                     }
 
-                    LabRequest labRequest = labrequestDAO.getLabRequestByID(labRequestID);
+                    LabRequest labRequest = labRequestDAO.getLabRequestByID(labRequestID);
                     if (labRequest != null) {
                         break;
                     } else {
@@ -434,7 +439,7 @@ public class Driver {
                     newLabRequestDate = LocalDateTime.parse(newDateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
                 } catch (DateTimeParseException e) {
                     System.out.println("Invalid date format. Keeping the previous date.");
-                    newLabRequestDate = labrequestDAO.getLabRequestByID(labRequestID).getLabRequestDate();
+                    newLabRequestDate = labRequestDAO.getLabRequestByID(labRequestID).getLabRequestDate();
                 }
 
                 // Ask the user to update the cost
@@ -462,7 +467,7 @@ public class Driver {
                 }
                 
 
-                labRequestService.updateLabRequest(labRequestID, laboratoryID, newLabRequestDate, newCost);
+                labRequestService.updateLabRequest(labRequestID, laboratoryID, newCost);
 
                 break;
 
@@ -551,6 +556,69 @@ public class Driver {
         }
     }
 
+    private void handleReadCommand(String[] parts) {
+        if (parts.length != 3) {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: read <entity> <id>");
+            return;
+        }
+    
+        String entity = parts[1];
+        int id;
+        try {
+            id = Integer.parseInt(parts[2]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid ID. Please enter a number.");
+            return;
+        }
+    
+        switch (entity.toLowerCase()) {
+            case "patient":
+                readPatient(id);
+                break;
+            case "doctor":
+                readDoctor(id);
+                break;
+            case "room":
+                readRoom(id);
+                break;
+            case "laboratory":
+                readLaboratory(id);
+                break;
+            case "admission":
+                readAdmission(id);
+                break;
+            case "appointment":
+                readAppointment(id);
+                break;
+            case "bill":
+                readBill(id);
+                break;
+            case "diagnosis":
+                readDiagnosis(id);
+                break;
+            case "disease":
+                readDisease(id);
+                break;
+            case "labactivity": // Note: This is one word due to the table name
+                readLabActivity(id);
+                break;
+            case "labrequest":
+                readLabRequest(id);
+                break;
+            case "labstaff":
+                readLabStaff(id);
+                break;
+            case "maintenance":
+                readMaintenance(id);
+                break;
+            case "treatment":
+                readTreatment(id);
+                break;
+            default:
+                System.out.println("Invalid entity type.");
+        }
+    }
+
     private void readPatient(int patientID) {
         Patient patient = patientDAO.getPatientByID(patientID);
         if (patient == null) {
@@ -583,16 +651,18 @@ public class Driver {
         if (laboratory == null) {
             System.out.println("Laboratory not found.");
         } else {
-            System.out.println(laboratory);
+            System.out.println("Laboratory Name: " + laboratory.getLaboratoryName());
         }
     }
     
-    private void readAdmission(int admissionID) {
-        Admission admission = AdmissionDAO.getAdmissionById(admissionID);
+        private void readAdmission(int admissionID) {
+        Admission admission = admissionDAO.getAdmissionById(admissionID);
         if (admission == null) {
             System.out.println("Admission not found.");
         } else {
-            System.out.println(admission);
+            System.out.println("Admission ID: " + admission.getAdmissionID());
+            System.out.println("Patient ID: " + admission.getPatientID());
+            System.out.println("Admission Date: " + admission.getAdmissionDate());
         }
     }
     
@@ -677,48 +747,226 @@ public class Driver {
         }
     }
 
+    private void handleListCommand(String[] parts) {
+        if (parts.length != 2) {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: list <entity>");
+            return;
+        }
     
+        String entity = parts[1];
+        switch (entity.toLowerCase()) {
+            case "patient":
+                listAllPatients();
+                break;
+            case "doctor":
+                listAllDoctors();
+                break;
+            case "room":
+                listAllRooms();
+                break;
+            case "laboratory":
+                listAllLaboratories();
+                break;
+            case "admission":
+                listAllAdmissions();
+                break;
+            case "appointment":
+                listAllAppointments();
+                break;
+            case "bill":
+                listAllBills();
+                break;
+            case "diagnosis":
+                listAllDiagnoses();
+                break;
+            case "disease":
+                listAllDiseases();
+                break;
+            case "labactivity":
+                listAllLabActivities();
+                break;
+            case "labrequest":
+                listAllLabRequests();
+                break;
+            case "labstaff":
+                listAllLabStaff();
+                break;
+            case "maintenance":
+                listAllMaintenanceRecords();
+                break;
+            case "treatment":
+                listAllTreatments();
+                break;
+            default:
+                System.out.println("Invalid entity type.");
+        }
+    }
     
-    private void readAllPatients() {
+    private void listAllPatients() {
         List<Patient> patients = patientDAO.getAllPatients();
         if (patients.isEmpty()) {
             System.out.println("No patients found.");
         } else {
             for (Patient patient : patients) {
-                System.out.println(patient);
+                System.out.println(patient.getPatientID() + ". " + patient.getFirstName() + " " + patient.getLastName());
             }
         }
     }
     
-    private void readAllDoctors() {
+    private void listAllDoctors() {
         List<Doctor> doctors = doctorDAO.getAllDoctors();
         if (doctors.isEmpty()) {
             System.out.println("No doctors found.");
         } else {
             for (Doctor doctor : doctors) {
-                System.out.println(doctor);
+                System.out.println(doctor.getDoctorID() + ". " + doctor.getFirstName() + " " + doctor.getLastName());
             }
         }
     }
     
-    private void readAllRooms() {
+    private void listAllRooms() {
         List<Room> rooms = roomDAO.getAllRooms();
         if (rooms.isEmpty()) {
             System.out.println("No rooms found.");
         } else {
             for (Room room : rooms) {
-                System.out.println(room.getRoomID());
+                System.out.println(room.getRoomID() + ". " + room.getRoomType());
             }
         }
     }
     
-    private void readAllLaboratories() {
+    private void listAllLaboratories() {
         List<Laboratory> laboratories = laboratoryDAO.getAllLaboratories();
         if (laboratories.isEmpty()) {
             System.out.println("No laboratories found.");
         } else {
             for (Laboratory laboratory : laboratories) {
-                System.out.println(laboratory.getLaboratoryName());
+                System.out.println(laboratory.getLaboratoryID() + ". " + laboratory.getLaboratoryName());
+            }
+        }
+    }
+
+    private void listAllAdmissions() {
+        List<Admission> admissions = admissionDAO.getAllAdmissions();
+        if (admissions.isEmpty()) {
+            System.out.println("No admissions found.");
+        } else {
+            for (Admission admission : admissions) {
+                Patient patient = patientDAO.getPatientByID(admission.getPatientID()); // Assuming you want to display patient name
+                System.out.println(admission.getAdmissionID() + ". Patient: " + patient.getFirstName() + " " + patient.getLastName() +
+                                   ", Type: " + admission.getAdmissionType() + ", Status: " + admission.getStatus());
+            }
+        }
+    }
+    
+    private void listAllAppointments() {
+        List<Appointment> appointments = appointmentDAO.getAllAppointments();
+        if (appointments.isEmpty()) {
+            System.out.println("No appointments found.");
+        } else {
+            for (Appointment appointment : appointments) {
+                Patient patient = patientDAO.getPatientByID(appointment.getPatientID());
+                Doctor doctor = doctorDAO.getDoctorByID(appointment.getDoctorID());
+                System.out.println(appointment.getAppointmentID() + ". Patient: " + patient.getFirstName() + " " + patient.getLastName() +
+                                   ", Doctor: " + doctor.getFirstName() + " " + doctor.getLastName() +
+                                   ", Time: " + appointment.getAppointmentTime());
+            }
+        }
+    }
+    
+    private void listAllBills() {
+        List<Bill> bills = billDAO.getAllBills();
+        if (bills.isEmpty()) {
+            System.out.println("No bills found.");
+        } else {
+            for (Bill bill : bills) {
+                System.out.println(bill.getBillID() + ". Amount: " + bill.getTotalAmount() +
+                                   ", Status: " + bill.getPaymentStatus());
+            }
+        }
+    }
+    
+    private void listAllDiagnoses() {
+        List<Diagnosis> diagnoses = diagnosisDAO.getAllDiagnoses();
+        if (diagnoses.isEmpty()) {
+            System.out.println("No diagnoses found.");
+        } else {
+            for (Diagnosis diagnosis : diagnoses) {
+                Disease disease = diseaseDAO.getDiseaseByID(diagnosis.getDiseaseID());
+                System.out.println(diagnosis.getDiagnosisID() + ". Disease: " + disease.getName() +
+                                   ", Severity: " + diagnosis.getSeverity() + ", Status: " + diagnosis.getStatus());
+            }
+        }
+    }
+    
+    private void listAllDiseases() {
+        List<Disease> diseases = diseaseDAO.getAllDiseases();
+        if (diseases.isEmpty()) {
+            System.out.println("No diseases found.");
+        } else {
+            for (Disease disease : diseases) {
+                System.out.println(disease.getDiseaseID() + ". " + disease.getName());
+            }
+        }
+    }
+    
+    private void listAllLabActivities() {
+        List<LabActivity> labActivities = labActivityDAO.getAllLabActivities();
+        if (labActivities.isEmpty()) {
+            System.out.println("No lab activities found.");
+        } else {
+            for (LabActivity labActivity : labActivities) {
+                System.out.println(labActivity.getLabActivityID() + ". Type: " + labActivity.getActivityType() +
+                                   ", Status: " + labActivity.getStatus());
+            }
+        }
+    }
+    
+    private void listAllLabRequests() {
+        List<LabRequest> labRequests = labRequestDAO.getAllLabRequests();
+        if (labRequests.isEmpty()) {
+            System.out.println("No lab requests found.");
+        } else {
+            for (LabRequest labRequest : labRequests) {
+                Patient patient = patientDAO.getPatientByID(labRequest.getPatientID());
+                System.out.println(labRequest.getLabRequestID() + ". Patient: " + patient.getFirstName() + " " + patient.getLastName() +
+                                   ", Date: " + labRequest.getLabRequestDate());
+            }
+        }
+    }
+    
+    private void listAllLabStaff() {
+        List<LabStaff> labStaffMembers = labStaffDAO.getAllLabStaff();
+        if (labStaffMembers.isEmpty()) {
+            System.out.println("No lab staff found.");
+        } else {
+            for (LabStaff labStaff : labStaffMembers) {
+                System.out.println(labStaff.getStaffID() + ". " + labStaff.getName() + ", Role: " + labStaff.getRole());
+            }
+        }
+    }
+    
+    private void listAllMaintenanceRecords() {
+        List<Maintenance> maintenanceRecords = maintenanceDAO.getAllMaintenanceRecords();
+        if (maintenanceRecords.isEmpty()) {
+            System.out.println("No maintenance records found.");
+        } else {
+            for (Maintenance maintenance : maintenanceRecords) {
+                System.out.println(maintenance.getMaintenanceID() + ". Room ID: " + maintenance.getRoomID() +
+                                   ", Status: " + maintenance.getStatus());
+            }
+        }
+    }
+    
+    private void listAllTreatments() {
+        List<Treatment> treatments = treatmentDAO.getAllTreatments();
+        if (treatments.isEmpty()) {
+            System.out.println("No treatments found.");
+        } else {
+            for (Treatment treatment : treatments) {
+                Patient patient = patientDAO.getPatientByID(treatment.getPatientID());
+                System.out.println(treatment.getTreatmentID() + ". Patient: " + patient.getFirstName() + " " + patient.getLastName() +
+                                   ", Type: " + treatment.getTreatmentType() + ", Cost: " + treatment.getCost());
             }
         }
     }
