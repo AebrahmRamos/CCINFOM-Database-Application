@@ -1568,10 +1568,9 @@ private void deleteTreatment(int treatmentID) {
                     if (parts.length == 5) {
                         int month = Integer.parseInt(parts[3]);
                         int year = Integer.parseInt(parts[4]);
-                        // Create ERProducivityReport class
 
-                        // ERProductivityReport erReport = new ERProductivityReport(); 
-                        // erReport.generateReport(month, year);
+                        ERProductivityReport erReport = new ERProductivityReport(); 
+                        erReport.generateReport(month, year);
                     } else {
                         System.out.println(INVALID_COMMAND_FORMAT + " Usage: generate report er-productivity <month> <year>");
                     }
