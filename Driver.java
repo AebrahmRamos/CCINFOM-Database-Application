@@ -88,6 +88,9 @@ public class Driver {
             case "generate":
                 handleGenerateCommand(parts);
                 break;
+            case "help":
+                handleHelpCommand(parts);
+                break;
             case "exit":
                 System.exit(0);
                 break;
@@ -340,6 +343,92 @@ public class Driver {
         Laboratory laboratory = new Laboratory(1, name, contactNumber);
         laboratoryDAO.createLaboratory(laboratory);
         System.out.println("Laboratory created successfully with id " + laboratory.getLaboratoryID());
+    }
+
+    private void handleHelpCommand(String[] parts) {
+        if (parts.length == 1) {
+            // Show general help message with all available commands
+            System.out.println("Available commands:");
+            System.out.println("  create <entity> - Create a new entity (patient, doctor, room, laboratory)");
+            System.out.println("  read <entity> - Read all entities of a given type");
+            System.out.println("  update <entity> <id> - Update an existing entity");
+            System.out.println("  delete <entity> <id> - Delete an entity");
+            System.out.println("  admit <admissionType> <patientID> <roomID> <doctorID> <admissionDate> <status> - Admit a patient");
+            System.out.println("  treat <patientID> <doctorID> <treatmentDate> <treatmentType> <description> <cost> - Schedule a treatment");
+            System.out.println("  request <patientID> <doctorID> <laboratoryID> <requestDate> <cost> - Create a lab request");
+            System.out.println("  discharge <admissionID> - Discharge a patient");
+            System.out.println("  generate report <report_type> <arguments> - Generate a report");
+            System.out.println("  exit - Quit the program");
+            System.out.println("Type 'help <command>' for more information on a specific command.");
+    
+        } else if (parts.length == 2) {
+            String commandName = parts[1];
+            switch (commandName.toLowerCase()) {
+                case "create":
+                    System.out.println("Usage: create <entity> <data>");
+                    System.out.println("  Creates a new entity of the specified type.");
+                    System.out.println("  Supported entities: patient, doctor, room, laboratory");
+                    System.out.println("  Example: create patient John Doe 1990-01-01 HMO-A \"No allergies\"");
+                    break;
+                case "read":
+                    System.out.println("Usage: read <entity>");
+                    System.out.println("  Reads all entities of the specified type.");
+                    System.out.println("  Supported entities: patient, doctor, room, laboratory");
+                    System.out.println("  Example: read patient");
+                    break;
+                case "update":
+                    System.out.println("Usage: update <entity> <id> <data>");
+                    System.out.println("  Updates an existing entity with the given ID.");
+                    System.out.println("  Supported entities: patient, doctor, room, laboratory");
+                    System.out.println("  Example: update patient 1 Jane Doe 1990-01-01 HMO-A \"No allergies\"");
+                    break;
+                case "delete":
+                    System.out.println("Usage: delete <entity> <id>");
+                    System.out.println("  Deletes the entity with the given ID.");
+                    System.out.println("  Supported entities: patient, doctor, room, laboratory");
+                    System.out.println("  Example: delete patient 1");
+                    break;
+                case "admit":
+                    System.out.println("Usage: admit <admissionType> <patientID> <roomID> <doctorID> <admissionDate> <status>");
+                    System.out.println("  Admits a patient.");
+                    System.out.println("  admissionType: in-patient or out-patient");
+                    System.out.println("  Example: admit in-patient 1 101 5 2024-11-23 Admitted");
+                    break;
+                case "treat":
+                    System.out.println("Usage: treat <patientID> <doctorID> <treatmentDate> <treatmentType> <description> <cost>");
+                    System.out.println("  Schedules a treatment for a patient.");
+                    System.out.println("  Example: treat 1 5 2024-11-24 \"Check-up\" \"General check-up\" 100.00");
+                    break;
+                case "request":
+                    System.out.println("Usage: request <patientID> <doctorID> <laboratoryID> <requestDate> <cost>");
+                    System.out.println("  Creates a lab request for a patient.");
+                    System.out.println("  Example: request 1 5 1 2024-11-23 50.00");
+                    break;
+                case "discharge":
+                    System.out.println("Usage: discharge <admissionID>");
+                    System.out.println("  Discharges a patient.");
+                    System.out.println("  Example: discharge 123");
+                    break;
+                case "generate":
+                    System.out.println("Usage: generate report <report_type> <arguments>");
+                    System.out.println("  Generates a report of the specified type.");
+                    System.out.println("  Supported report types:");
+                    System.out.println("    disease-activity <month> <year>");
+                    System.out.println("    doctor-productivity <month> <year>");
+                    System.out.println("    er-productivity <month> <year>");
+                    System.out.println("    laboratory <month> <year>");
+                    System.out.println("  Example: generate report laboratory 11 2024");
+                    break;
+                case "exit":
+                    System.out.println("Usage: exit");
+                    System.out.println("  Quits the program.");
+                    break;
+                default:
+                    System.out.println("Invalid command name.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: help [command]");
+        }
     }
     
 }
