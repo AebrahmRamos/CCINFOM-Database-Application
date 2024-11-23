@@ -75,7 +75,17 @@ public class LabRequestDAO {
         }
     }
 
-    // ... (deleteLabRequest method remains the same)
+    public void deleteLabRequest(int requestID) {
+        try (Connection connection = HospitalManagementDB.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "DELETE FROM LabRequest WHERE requestID = ?")) {
+
+            statement.setInt(1, requestID);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error deleting lab request: " + e.getMessage());
+        }
+    }
 
     public List<LabRequest> getAllLabRequests() {
         List<LabRequest> labRequests = new ArrayList<>();

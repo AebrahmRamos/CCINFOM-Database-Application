@@ -97,7 +97,7 @@ public class Driver {
                 handleUpdateCommand(parts);
                 break;
             case "delete":
-                // handleDeleteCommand(parts);
+                handleDeleteCommand(parts);
                 break;
             case "admit":
                 // handleAdmitCommand(parts);
@@ -192,6 +192,139 @@ private void handleUpdateCommand(String[] parts) {
         default:
             System.out.println("Invalid entity type.");
     }
+}
+
+private void handleDeleteCommand(String[] parts) {
+    if (parts.length != 3) {
+        System.out.println(INVALID_COMMAND_FORMAT + " Usage: delete <entity> <id>");
+        return;
+    }
+
+    String entity = parts[1];
+    int id;
+    try {
+        id = Integer.parseInt(parts[2]);
+    } catch (NumberFormatException e) {
+        System.out.println("Invalid ID. Please enter a number.");
+        return;
+    }
+
+    switch (entity.toLowerCase()) {
+        case "patient":
+            deletePatient(id);
+            break;
+        case "doctor":
+            deleteDoctor(id);
+            break;
+        case "room":
+            deleteRoom(id);
+            break;
+        case "laboratory":
+            deleteLaboratory(id);
+            break;
+        case "admission":
+            deleteAdmission(id);
+            break;
+        case "appointment":
+            deleteAppointment(id);
+            break;
+        case "bill":
+            deleteBill(id);
+            break;
+        case "diagnosis":
+            deleteDiagnosis(id);
+            break;
+        case "disease":
+            deleteDisease(id);
+            break;
+        case "labactivity":
+            deleteLabActivity(id);
+            break;
+        case "labrequest":
+            deleteLabRequest(id);
+            break;
+        case "labstaff":
+            deleteLabStaff(id);
+            break;
+        case "maintenance":
+            deleteMaintenance(id);
+            break;
+        case "treatment":
+            deleteTreatment(id);
+            break;
+        default:
+            System.out.println("Invalid entity type.");
+    }
+}
+
+private void deletePatient(int patientID) {
+    patientDAO.deletePatient(patientID);
+    System.out.println("Patient deleted successfully.");
+}
+
+private void deleteDoctor(int doctorID) {
+    doctorDAO.deleteDoctor(doctorID);
+    System.out.println("Doctor deleted successfully.");
+}
+
+private void deleteRoom(int roomID) {
+    roomDAO.deleteRoom(roomID);
+    System.out.println("Room deleted successfully.");
+}
+
+private void deleteLaboratory(int laboratoryID) {
+    laboratoryDAO.deleteLaboratory(laboratoryID);
+    System.out.println("Laboratory deleted successfully.");
+}
+
+private void deleteAdmission(int admissionID) {
+    admissionDAO.deleteAdmission(admissionID);
+    System.out.println("Admission deleted successfully.");
+}
+
+private void deleteAppointment(int appointmentID) {
+    appointmentDAO.deleteAppointment(appointmentID);
+    System.out.println("Appointment deleted successfully.");
+}
+
+private void deleteBill(int billID) {
+    billDAO.deleteBill(billID);
+    System.out.println("Bill deleted successfully.");
+}
+
+private void deleteDiagnosis(int diagnosisID) {
+    diagnosisDAO.deleteDiagnosis(diagnosisID);
+    System.out.println("Diagnosis deleted successfully.");
+}
+
+private void deleteDisease(int diseaseID) {
+    diseaseDAO.deleteDisease(diseaseID);
+    System.out.println("Disease deleted successfully.");
+}
+
+private void deleteLabActivity(int labActivityID) {
+    labActivityDAO.deleteLabActivity(labActivityID);
+    System.out.println("Lab Activity deleted successfully.");
+}
+
+private void deleteLabRequest(int labRequestID) {
+    labRequestDAO.deleteLabRequest(labRequestID);
+    System.out.println("Lab Request deleted successfully.");
+}
+
+private void deleteLabStaff(int labStaffID) {
+    labStaffDAO.deleteLabStaff(labStaffID);
+    System.out.println("Lab Staff deleted successfully.");
+}
+
+private void deleteMaintenance(int maintenanceID) {
+    maintenanceDAO.deleteMaintenance(maintenanceID);
+    System.out.println("Maintenance deleted successfully.");
+}
+
+private void deleteTreatment(int treatmentID) {
+    treatmentDAO.deleteTreatment(treatmentID);
+    System.out.println("Treatment deleted successfully.");
 }
 
 // Update methods for each entity

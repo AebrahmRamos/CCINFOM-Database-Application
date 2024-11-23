@@ -11,9 +11,9 @@ public class PatientDAO {
 
     public void createPatient(Patient patient) {
         try (Connection connection = HospitalManagementDB.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO Patient (firstName, lastName, birthDate, HMO, medicalHistory)", 
-                     Statement.RETURN_GENERATED_KEYS)) {
+        PreparedStatement statement = connection.prepareStatement(
+            "INSERT INTO Patient (firstName, lastName, birthDate, HMO, medicalHistory) VALUES (?, ?, ?, ?, ?)",
+            Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, patient.getFirstName());
             statement.setString(2, patient.getLastName());

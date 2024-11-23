@@ -93,4 +93,15 @@ public class RoomDAO {
         }
         return rooms;
     }
+
+    public void deleteRoom(int roomID) {
+        try (Connection connection = HospitalManagementDB.getConnection();
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM Room WHERE roomID = ?")) {
+    
+            statement.setInt(1, roomID);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error deleting room: " + e.getMessage());
+        }
+    }
 }
