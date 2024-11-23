@@ -77,13 +77,12 @@ public class LabRequestDAO {
 
     public void deleteLabRequest(int requestID) {
         try (Connection connection = HospitalManagementDB.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "DELETE FROM LabRequest WHERE requestID = ?")) {
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM LabRequest WHERE requestID = ?")) {
 
             statement.setInt(1, requestID);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Error deleting lab request: " + e.getMessage());
+            System.err.println("Error deleting laboratory request: " + e.getMessage());
         }
     }
 

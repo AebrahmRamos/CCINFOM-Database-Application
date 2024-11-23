@@ -1292,8 +1292,8 @@ private void deleteTreatment(int treatmentID) {
 
     private void handleTreatCommand(String[] parts) {
     	Scanner scanner = new Scanner(System.in);
-			if (parts.length != 2 ) {
-				System.out.println(INVALID_COMMAND_FORMAT + " Usage: treat <schedule/update>");
+			if (parts.length != 1 ) {
+				System.out.println(INVALID_COMMAND_FORMAT + " Usage: treat schedule");
 			    return;
 			}
 			
@@ -1391,57 +1391,7 @@ private void deleteTreatment(int treatmentID) {
 			    	treatmentService.scheduleTreatment(patientID, doctorID, roomID, admissionDate, treatmentType, description, cost);
 			    	
 					break;
-					
-				case "update":
-					// ask the user to input a valid treatment id
-			    	int treatmentID;
-			    	while (true) {
-			    		System.out.println("Input a Treatment ID (or 0 to go back): ");
-			    		treatmentID = scanner.nextInt();
-			    		scanner.nextLine(); // consume newline
-			    		
-			    		// if input is 0 exits the function
-			    		if (treatmentID == 0) {
-			    			System.out.println("** Exitting command treat. **");
-			    			return; // exits the scheduling function
-			    		}
-			    		
-						Treatment treatment = treatmentDAO.getTreatmentByID(treatmentID);
-			    		if (treatment != null) {
-			    			break; // exits loop if treatment record is found
-			    		} else {
-			    			System.out.println("Treatment ID " + treatmentID + " does not exist. Please try again.");
-			    		}
-			    	}
-			    	// ask the user to update the treatment type
-			    	System.out.println("Enter Treatment Type: ");
-			    	treatmentType = scanner.nextLine();
-			    	
-			    	// ask the user to update description
-			    	System.out.println("Enter Description: ");
-			    	description = scanner.nextLine();
-			    	
-			    	// ask the user to update cost
-			    	System.out.println("Enter Cost: ");
-			    	cost = scanner.nextDouble();
-			    	scanner.nextLine(); // consume newline
-			    	
-			    	// ask the user to update the admissionDate
-			    	while (true) {
-			    		System.out.println("Update Admission Date (yyyy-MM-dd): ");
-			    		String dateInput = scanner.nextLine();
-			    		try {
-			    			admissionDate = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-			    			break; // exit loop if date is valid
-			    		} catch (DateTimeParseException e) {
-			    			System.out.println("Invalid date format. Please enter the date in the format yyyy-MM-dd");
-			    		}
-			    	}
-			    	
-			    	treatmentService.updateTreatment(treatmentID, treatmentType, description, cost, admissionDate);
-			    	
-					break;
-					
+				
 				default:
 					System.out.println("Invalid entity type. Usage: treat <schedule/update>");
 			}
@@ -1450,7 +1400,7 @@ private void deleteTreatment(int treatmentID) {
     private void handleRequestCommand(String[] parts) {
         Scanner scanner = new Scanner(System.in);
         if (parts.length != 2) {
-            System.out.println(INVALID_COMMAND_FORMAT + " Usage: request <schedule/update>");
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: request schedule");
             return;
         }
 
@@ -1539,67 +1489,7 @@ private void deleteTreatment(int treatmentID) {
 
                 break;
 
-            case "update":
-                // Ask the user for labRequestID until valid
-                int labRequestID;
-                while (true) {
-                    System.out.println("Enter Lab Request ID (or 0 to go back): ");
-                    labRequestID = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
-
-                    if (labRequestID == 0) {
-                        System.out.println("** Exiting command request. **");
-                        return;
-                    }
-
-                    LabRequest labRequest = labRequestDAO.getLabRequestByID(labRequestID);
-                    if (labRequest != null) {
-                        break;
-                    } else {
-                        System.out.println("Lab Request ID " + labRequestID + " does not exist. Please try again.");
-                    }
-                }
-
-                // Ask the user to update the lab request date details
-                System.out.println("Enter New Lab Request Date and Time (yyyy-MM-ddTHH:mm): ");
-                String newDateInput = scanner.nextLine();
-                LocalDateTime newLabRequestDate;
-                try {
-                    newLabRequestDate = LocalDateTime.parse(newDateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
-                } catch (DateTimeParseException e) {
-                    System.out.println("Invalid date format. Keeping the previous date.");
-                    newLabRequestDate = labRequestDAO.getLabRequestByID(labRequestID).getLabRequestDate();
-                }
-
-                // Ask the user to update the cost
-                System.out.println("Enter New Cost: ");
-                double newCost = scanner.nextDouble();
-                scanner.nextLine(); // Consume newline
-                
-                // Ask the user to update laboratoryID
-                while (true) {
-                    System.out.println("Update Laboratory ID (or 0 to go back): ");
-                    laboratoryID = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
-
-                    if (laboratoryID == 0) {
-                        System.out.println("** Exiting command request. **");
-                        return;
-                    }
-
-                    Laboratory lab = laboratoryDAO.getLaboratoryByID(laboratoryID);
-                    if (lab != null) {
-                        break;
-                    } else {
-                        System.out.println("Laboratory ID " + laboratoryID + " does not exist. Please try again.");
-                    }
-                }
-                
-
-                labRequestService.updateLabRequest(labRequestID, laboratoryID, newCost);
-
-                break;
-
+            
             default:
                 System.out.println("Invalid action type. Usage: request <schedule/update>");
         }
@@ -1682,6 +1572,195 @@ private void deleteTreatment(int treatmentID) {
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid month or year. Please enter numbers.");
+        }
+    }
+
+    private void handleDeleteCommand(String[] parts) {
+    	boolean isDeleted;
+    	if (parts.length != 3) {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: delete <entity> <data>");
+            return;
+        }
+
+        String entity = parts[1];
+        switch (entity.toLowerCase()) {
+        	case "admission":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (admissionDAO.getAdmissionById(id) == null) {
+        				System.out.println("Admission ID does not exist.");
+        			} else {
+            			admissionDAO.deleteAdmission(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for admission ID. It should be an integer."); 
+        		}
+        	break;
+        	
+        	case "bill":
+        		Bill bill;
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			bill = billDAO.getBillByID(id);
+        			if (bill == null) {
+        				System.out.println("Bill ID does not exist.");
+        			} else {
+        				if (!bill.getPaymentStatus().equals("Paid")) {
+        					System.out.println("Cannot delete bill. Payment Status currently not paid.");
+        				} else {
+            			billDAO.deleteBill(id);
+        				}
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for bill ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "diagnosis":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (diagnosisDAO.getDiagnosisByID(id) == null) {
+        				System.out.println("Diagnosis ID does not exist.");
+        			} else {
+            			diagnosisDAO.deleteDiagnosis(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for diagnosis ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "disease":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (diseaseDAO.getDiseaseByID(id) == null) {
+        				System.out.println("Disease ID does not exist.");
+        			} else {
+            			diseaseDAO.deleteDisease(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for disease ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "doctor":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (doctorDAO.getDoctorByID(id) == null) {
+        				System.out.println("Doctor ID does not exist.");
+        			} else {
+            			doctorDAO.deleteDoctor(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for doctor ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "labactivity":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (labActivityDAO.getLabActivityByID(id) == null) {
+        				System.out.println("Lab Activity ID does not exist.");
+        			} else {
+            			labActivityDAO.deleteLabActivity(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for lab activity ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "laboratory":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (laboratoryDAO.getLaboratoryByID(id) == null) {
+        				System.out.println("Laboratory ID does not exist.");
+        			} else {
+            			laboratoryDAO.deleteLaboratory(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for laboratory ID. It should be an integer."); 
+        		}
+        		break;
+        	
+        	case "labrequest":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (labRequestDAO.getLabRequestByID(id) == null) {
+        				System.out.println("Lab Request ID does not exist.");
+        			} else {
+            			labRequestDAO.deleteLabRequest(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for admission ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "labstaff":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (labStaffDAO.getLabStaffByID(id) == null) {
+        				System.out.println("Lab Staff ID does not exist.");
+        			} else {
+            			labStaffDAO.deleteLabStaff(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for lab staff ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "maintenance":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (maintenanceDAO.getMaintenanceByID(id) == null) {
+        				System.out.println("Maintenance ID does not exist.");
+        			} else {
+            			maintenanceDAO.deleteMaintenance(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for maintenance ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "patient":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (patientDAO.getPatientByID(id) == null) {
+        				System.out.println("Patient ID does not exist.");
+        			} else {
+            			patientDAO.deletePatient(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for patient ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "room":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (roomDAO.getRoomByID(id) == null) {
+        				System.out.println("Room ID does not exist.");
+        			} else {
+            			roomDAO.deleteRoom(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for admission ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	case "treatment":
+        		try { 
+        			int id = Integer.parseInt(parts[2]);
+        			if (treatmentDAO.getTreatmentByID(id) == null) {
+        				System.out.println("Treatment ID does not exist.");
+        			} else {
+            			treatmentDAO.deleteTreatment(id);
+        			}	
+        		} catch (NumberFormatException e) { 
+        				System.out.println("Invalid data format for treatment ID. It should be an integer."); 
+        		}
+        		break;
+        		
+        	default:
+        		System.out.println("Invalid entity type.");
         }
     }
 
