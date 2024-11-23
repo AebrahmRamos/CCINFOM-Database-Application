@@ -12,24 +12,46 @@ public class Driver {
     private DoctorDAO doctorDAO;
     private RoomDAO roomDAO;
     private LaboratoryDAO laboratoryDAO;
+    private AdmissionDAO admissionDAO;
+    private AppointmentDAO appointmentDAO;
+    private BillDAO billDAO;
+    private DiagnosisDAO diagnosisDAO;
+    private DiseaseDAO diseaseDAO;
+    private LabActivityDAO labActivityDAO;
+    private LabRequestDAO labRequestDAO;
+    private LabStaffDAO labStaffDAO;
+    private MaintenanceDAO maintenanceDAO;
+    private TreatmentDAO treatmentDAO;
     private AdmissionService admissionService;
     private TreatmentService treatmentService;
     private LabRequestService labRequestService;
     private DischargeService dischargeService;
     private LaboratoryProductivityReport labReport;
-    // ... (Add other service/report instances as needed)
 
+
+    
+
+    
     public Driver() {
         patientDAO = new PatientDAO();
         doctorDAO = new DoctorDAO();
         roomDAO = new RoomDAO();
         laboratoryDAO = new LaboratoryDAO();
+        admissionDAO = new AdmissionDAO();
+        appointmentDAO = new AppointmentDAO();
+        billDAO = new BillDAO();
+        diagnosisDAO = new DiagnosisDAO();
+        diseaseDAO = new DiseaseDAO();
+        labActivityDAO = new LabActivityDAO();
+        labRequestDAO = new LabRequestDAO();
+        labStaffDAO = new LabStaffDAO();
+        maintenanceDAO = new MaintenanceDAO();
+        treatmentDAO = new TreatmentDAO();
         admissionService = new AdmissionService();
         treatmentService = new TreatmentService();
         labRequestService = new LabRequestService();
         dischargeService = new DischargeService();
         labReport = new LaboratoryProductivityReport();
-        // ADD MISSING DAO'S
     }
 
     public static void main(String[] args) {
@@ -211,30 +233,133 @@ public class Driver {
         }
     }
 
-    private void handleReadCommand(String[] parts) {
-        if (parts.length < 2) {
-            System.out.println(INVALID_COMMAND_FORMAT + " Usage: read <entity>");
-            return;
-        }
-    
-        String entity = parts[1];
-        switch (entity.toLowerCase()) {
-            case "patient":
-                readAllPatients();
-                break;
-            case "doctor":
-                readAllDoctors();
-                break;
-            case "room":
-                readAllRooms();
-                break;
-            case "laboratory":
-                readAllLaboratories();
-                break;
-            default:
-                System.out.println("Invalid entity type.");
+    private void readPatient(int patientID) {
+        Patient patient = patientDAO.getPatientByID(patientID);
+        if (patient == null) {
+            System.out.println("Patient not found.");
+        } else {
+            System.out.println(patient);
         }
     }
+    
+    private void readDoctor(int doctorID) {
+        Doctor doctor = doctorDAO.getDoctorByID(doctorID);
+        if (doctor == null) {
+            System.out.println("Doctor not found.");
+        } else {
+            System.out.println(doctor);
+        }
+    }
+    
+    private void readRoom(int roomID) {
+        Room room = roomDAO.getRoomByID(roomID);
+        if (room == null) {
+            System.out.println("Room not found.");
+        } else {
+            System.out.println(room);
+        }
+    }
+    
+    private void readLaboratory(int laboratoryID) {
+        Laboratory laboratory = laboratoryDAO.getLaboratoryByID(laboratoryID);
+        if (laboratory == null) {
+            System.out.println("Laboratory not found.");
+        } else {
+            System.out.println(laboratory);
+        }
+    }
+    
+    private void readAdmission(int admissionID) {
+        Admission admission = AdmissionDAO.getAdmissionById(admissionID);
+        if (admission == null) {
+            System.out.println("Admission not found.");
+        } else {
+            System.out.println(admission);
+        }
+    }
+    
+    private void readAppointment(int appointmentID) {
+        Appointment appointment = appointmentDAO.getAppointmentById(appointmentID);
+        if (appointment == null) {
+            System.out.println("Appointment not found.");
+        } else {
+            System.out.println(appointment);
+        }
+    }
+    
+    private void readBill(int billID) {
+        Bill bill = billDAO.getBillByID(billID);
+        if (bill == null) {
+            System.out.println("Bill not found.");
+        } else {
+            System.out.println(bill);
+        }
+    }
+    
+    private void readDiagnosis(int diagnosisID) {
+        Diagnosis diagnosis = diagnosisDAO.getDiagnosisByID(diagnosisID);
+        if (diagnosis == null) {
+            System.out.println("Diagnosis not found.");
+        } else {
+            System.out.println(diagnosis);
+        }
+    }
+    
+    private void readDisease(int diseaseID) {
+        Disease disease = diseaseDAO.getDiseaseByID(diseaseID);
+        if (disease == null) {
+            System.out.println("Disease not found.");
+        } else {
+            System.out.println(disease);
+        }
+    }
+    
+    private void readLabActivity(int labActivityID) {
+        LabActivity labActivity = labActivityDAO.getLabActivityByID(labActivityID);
+        if (labActivity == null) {
+            System.out.println("Lab Activity not found.");
+        } else {
+            System.out.println(labActivity);
+        }
+    }
+    
+    private void readLabRequest(int labRequestID) {
+        LabRequest labRequest = labRequestDAO.getLabRequestByID(labRequestID);
+        if (labRequest == null) {
+            System.out.println("Lab Request not found.");
+        } else {
+            System.out.println(labRequest);
+        }
+    }
+    
+    private void readLabStaff(int labStaffID) {
+        LabStaff labStaff = labStaffDAO.getLabStaffByID(labStaffID);
+        if (labStaff == null) {
+            System.out.println("Lab Staff not found.");
+        } else {
+            System.out.println(labStaff);
+        }
+    }
+    
+    private void readMaintenance(int maintenanceID) {
+        Maintenance maintenance = maintenanceDAO.getMaintenanceByID(maintenanceID);
+        if (maintenance == null) {
+            System.out.println("Maintenance not found.");
+        } else {
+            System.out.println(maintenance);
+        }
+    }
+    
+    private void readTreatment(int treatmentID) {
+        Treatment treatment = treatmentDAO.getTreatmentByID(treatmentID);
+        if (treatment == null) {
+            System.out.println("Treatment not found.");
+        } else {
+            System.out.println(treatment);
+        }
+    }
+
+    
     
     private void readAllPatients() {
         List<Patient> patients = patientDAO.getAllPatients();
