@@ -86,7 +86,7 @@ public class Driver {
                 handleTreatCommand(parts);
                 break;
             case "request":
-                // handleRequestCommand(parts);
+                handleRequestCommand(parts);
                 break;
             case "discharge":
                 handleDischargeCommand(parts);
