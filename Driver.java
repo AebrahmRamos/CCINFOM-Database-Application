@@ -1543,10 +1543,9 @@ private void deleteTreatment(int treatmentID) {
                     if (parts.length == 5) {
                         int month = Integer.parseInt(parts[3]);
                         int year = Integer.parseInt(parts[4]);
-                        // Create a DiseaseActivityReport class
 
-                        // DiseaseActivityReport diseaseReport = new DiseaseActivityReport(); 
-                        // diseaseReport.generateReport(month, year);
+                        DiseaseActivityReport diseaseReport = new DiseaseActivityReport(); 
+                        diseaseReport.generateReport(month, year);
                     } else {
                         System.out.println(INVALID_COMMAND_FORMAT + " Usage: generate report disease-activity <month> <year>");
                     }
