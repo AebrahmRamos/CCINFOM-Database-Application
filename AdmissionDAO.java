@@ -27,8 +27,8 @@ public class AdmissionDAO {
     public void createAdmission(Admission admission) {
         try (Connection connection = HospitalManagementDB.getConnection(); // Connection opened here
              PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO Admission (patientId, roomId, doctorId, admissionDate, admissionType, status) " +
-                             "VALUES (?, ?, ?, ?, ?, ?)")) {
+                        "INSERT INTO Admission (patientID, roomID, doctorID, admissionDate, admissionType, status) VALUES (?, ?, ?, ?, ?, ?)", 
+                        Statement.RETURN_GENERATED_KEYS)){
 
             statement.setInt(1, admission.getPatientID());
             statement.setInt(2, admission.getRoomID());
