@@ -71,7 +71,17 @@ public class RoomDAO {
         }
     }
 
-    // ... (deleteRoom method remains unchanged)
+    public void deleteRoom(int roomID) {
+        try (Connection connection = HospitalManagementDB.getConnection();
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM Room WHERE roomID = ?")) {
+
+            statement.setInt(1, roomID);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error deleting room record: " + e.getMessage());
+        }
+    }
+
 
     public List<Room> getAllRooms() {
         List<Room> rooms = new ArrayList<>();
