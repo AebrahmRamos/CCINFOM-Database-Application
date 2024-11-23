@@ -94,7 +94,7 @@ public class Driver {
                 handleReadCommand(parts);
                 break;
             case "update":
-                // handleUpdateCommand(parts);
+                handleUpdateCommand(parts);
                 break;
             case "delete":
                 // handleDeleteCommand(parts);
@@ -131,6 +131,1002 @@ public class Driver {
 // HELPERS
 
 // COMMAND HANDLERS
+private void handleUpdateCommand(String[] parts) {
+    if (parts.length < 3) {
+        System.out.println(INVALID_COMMAND_FORMAT + " Usage: update <entity> <id> <data>");
+        return;
+    }
+
+    String entity = parts[1];
+    int id;
+    try {
+        id = Integer.parseInt(parts[2]);
+    } catch (NumberFormatException e) {
+        System.out.println("Invalid ID. Please enter a number.");
+        return;
+    }
+
+    switch (entity.toLowerCase()) {
+        case "patient":
+            updatePatient(parts);
+            break;
+        case "doctor":
+            updateDoctor(parts);
+            break;
+        case "room":
+            updateRoom(parts);
+            break;
+        case "laboratory":
+            updateLaboratory(parts);
+            break;
+        case "admission":
+            updateAdmission(parts);
+            break;
+        case "appointment":
+            updateAppointment(parts);
+            break;
+        case "bill":
+            updateBill(parts);
+            break;
+        case "diagnosis":
+            updateDiagnosis(parts);
+            break;
+        case "disease":
+            updateDisease(parts);
+            break;
+        case "labactivity":
+            updateLabActivity(parts);
+            break;
+        case "labrequest":
+            updateLabRequest(parts);
+            break;
+        case "labstaff":
+            updateLabStaff(parts);
+            break;
+        case "maintenance":
+            updateMaintenance(parts);
+            break;
+        case "treatment":
+            updateTreatment(parts);
+            break;
+        default:
+            System.out.println("Invalid entity type.");
+    }
+}
+
+// Update methods for each entity
+
+    private void updatePatient(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int patientID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+
+                Patient patient = patientDAO.getPatientByID(patientID);
+                if (patient == null) {
+                    System.out.println("Patient not found.");
+                    return;
+                }
+
+                switch (field.toLowerCase()) {
+                    case "firstname":
+                        patient.setFirstName(value);
+                        break;
+                    case "lastname":
+                        patient.setLastName(value);
+                        break;
+                    case "birthdate":
+                        patient.setBirthDate(LocalDate.parse(value));
+                        break;
+                    case "hmo":
+                        patient.setHmoProvider(value);
+                        break;
+                    case "medicalhistory":
+                        patient.setMedicalHistory(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Patient.");
+                        return;
+                }
+
+                patientDAO.updatePatient(patient); // Update in the database
+                System.out.println("Patient updated successfully.");
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid patient ID. Please enter a number.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            }
+        } else if (parts.length == 8) {
+            // Update all fields
+            try {
+                int patientID = Integer.parseInt(parts[2]);
+                String firstName = parts[3];
+                String lastName = parts[4];
+                LocalDate birthDate = LocalDate.parse(parts[5]);
+                String HMO = parts[6];
+                String medicalHistory = parts[7];
+
+                Patient patient = new Patient(patientID, firstName, lastName, birthDate, HMO, medicalHistory);
+                patientDAO.updatePatient(patient); // Update in the database
+                System.out.println("Patient updated successfully.");
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid patient ID. Please enter a number.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update patient <id> <field> <value> OR update patient <id> <firstName> <lastName> <birthDate> <HMO> <medicalHistory>");
+        }
+    }
+
+    private void updateDoctor(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int doctorID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Doctor doctor = doctorDAO.getDoctorByID(doctorID);
+                if (doctor == null) {
+                    System.out.println("Doctor not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "firstname":
+                        doctor.setFirstname(value);
+                        break;
+                    case "lastname":
+                        doctor.setLastname(value);
+                        break;
+                    case "specialization":
+                        doctor.setSpecialization(value);
+                        break;
+                    case "department":
+                        doctor.setDepartment(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Doctor.");
+                        return;
+                }
+    
+                doctorDAO.updateDoctor(doctor); // Persist changes to the database
+                System.out.println("Doctor updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid doctor ID. Please enter a number.");
+            }
+        } else if (parts.length == 7) {
+            // Update all fields
+            try {
+                int doctorID = Integer.parseInt(parts[2]);
+                String firstName = parts[3];
+                String lastName = parts[4];
+                String specialization = parts[5];
+                String department = parts[6];
+    
+                Doctor doctor = new Doctor(doctorID, firstName, lastName, specialization, department);
+                doctorDAO.updateDoctor(doctor); // Persist changes to the database
+                System.out.println("Doctor updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid doctor ID. Please enter a number.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update doctor <id> <field> <value> OR update doctor <id> <firstName> <lastName> <specialization> <department>");
+        }
+    }
+    
+    private void updateRoom(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int roomID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Room room = roomDAO.getRoomByID(roomID);
+                if (room == null) {
+                    System.out.println("Room not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "roomtype":
+                        room.setRoomType(value);
+                        break;
+                    case "isavailable":
+                        room.setAvailable(Boolean.parseBoolean(value));
+                        break;
+                    case "lastmaintenance":
+                        room.setLastMaintenance(LocalDate.parse(value));
+                        break;
+                    case "cost":
+                        room.setCost(Double.parseDouble(value));
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Room.");
+                        return;
+                }
+    
+                roomDAO.updateRoom(room); // Persist changes to the database
+                System.out.println("Room updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid room ID or cost. Please enter numbers.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for lastMaintenance. Please use YYYY-MM-DD.");
+            }
+        } else if (parts.length == 7) {
+            // Update all fields
+            try {
+                int roomID = Integer.parseInt(parts[2]);
+                String roomType = parts[3];
+                boolean isAvailable = Boolean.parseBoolean(parts[4]);
+                LocalDate lastMaintenance = LocalDate.parse(parts[5]);
+                double cost = Double.parseDouble(parts[6]);
+    
+                Room room = new Room(roomID, roomType, isAvailable, lastMaintenance, cost);
+                roomDAO.updateRoom(room); // Persist changes to the database
+                System.out.println("Room updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid room ID or cost. Please enter numbers.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for lastMaintenance. Please use YYYY-MM-DD.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update room <id> <field> <value> OR update room <id> <roomType> <isAvailable> <lastMaintenance> <cost>");
+        }
+    }
+    
+    private void updateLaboratory(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int laboratoryID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Laboratory laboratory = laboratoryDAO.getLaboratoryByID(laboratoryID);
+                if (laboratory == null) {
+                    System.out.println("Laboratory not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "name":
+                        laboratory.setLaboratoryName(value);
+                        break;
+                    case "contactnumber":
+                        laboratory.setContactNumber(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Laboratory.");
+                        return;
+                }
+    
+                laboratoryDAO.updateLaboratory(laboratory); // Persist changes to the database
+                System.out.println("Laboratory updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid laboratory ID. Please enter a number.");
+            }
+        } else if (parts.length == 5) {
+            // Update all fields
+            try {
+                int laboratoryID = Integer.parseInt(parts[2]);
+                String name = parts[3];
+                String contactNumber = parts[4];
+    
+                Laboratory laboratory = new Laboratory(laboratoryID, name, contactNumber);
+                laboratoryDAO.updateLaboratory(laboratory); // Persist changes to the database
+                System.out.println("Laboratory updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid laboratory ID. Please enter a number.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update laboratory <id> <field> <value> OR update laboratory <id> <name> <contactNumber>");
+        }
+    }
+    
+    private void updateAdmission(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int admissionID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Admission admission = admissionDAO.getAdmissionById(admissionID);
+                if (admission == null) {
+                    System.out.println("Admission not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "patientid":
+                        admission.setPatientID(Integer.parseInt(value));
+                        break;
+                    case "roomid":
+                        admission.setRoomID(Integer.parseInt(value));
+                        break;
+                    case "doctorid":
+                        admission.setDoctorID(Integer.parseInt(value));
+                        break;
+                    case "admissiondate":
+                        admission.setAdmissionDate(LocalDate.parse(value));
+                        break;
+                    case "admissiontype":
+                        admission.setAdmissionType(value);
+                        break;
+                    case "status":
+                        admission.setStatus(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Admission.");
+                        return;
+                }
+    
+                admissionDAO.updateAdmission(admission); // Persist changes to the database
+                System.out.println("Admission updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for admissionDate. Please use YYYY-MM-DD.");
+            }
+        } else if (parts.length == 9) { // Adjusted for 8 data fields + ID
+            // Update all fields
+            try {
+                int admissionID = Integer.parseInt(parts[2]);
+                int patientID = Integer.parseInt(parts[3]);
+                int roomID = Integer.parseInt(parts[4]);
+                int doctorID = Integer.parseInt(parts[5]);
+                LocalDate admissionDate = LocalDate.parse(parts[6]);
+                String admissionType = parts[7];
+                String status = parts[8];
+    
+                Admission admission = new Admission(admissionID, patientID, roomID, doctorID, admissionDate, admissionType, status);
+                admissionDAO.updateAdmission(admission); // Persist changes tothe database
+                System.out.println("Admission updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for admissionDate. Please use YYYY-MM-DD.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update admission <id> <field> <value> OR update admission <id> <patientID> <roomID> <doctorID> <admissionDate> <admissionType> <status>");
+        }
+    }
+    
+    private void updateAppointment(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int appointmentID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Appointment appointment = appointmentDAO.getAppointmentById(appointmentID);
+                if (appointment == null) {
+                    System.out.println("Appointment not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "patientid":
+                        appointment.setPatientID(Integer.parseInt(value));
+                        break;
+                    case "doctorid":
+                        appointment.setDoctorID(Integer.parseInt(value));
+                        break;
+                    case "roomid":
+                        appointment.setRoomID(Integer.parseInt(value));
+                        break;
+                    case "appointmenttime":
+                        appointment.setAppointmentTime(LocalDateTime.parse(value));
+                        break;
+                    case "status":
+                        appointment.setStatus(value);
+                        break;
+                    case "appointmenttype":
+                        appointment.setAppointmentType(value);
+                        break;
+                    case "priority":
+                        appointment.setPriority(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Appointment.");
+                        return;
+                }
+    
+                appointmentDAO.updateAppointment(appointment); // Persist changes to the database
+                System.out.println("Appointment updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid datetime format for appointmentTime. Please use YYYY-MM-DDTHH:mm:ss");
+            }
+        } else if (parts.length == 10) { // Adjusted for 9 data fields + ID
+            // Update all fields
+            try {
+                int appointmentID = Integer.parseInt(parts[2]);
+                int patientID = Integer.parseInt(parts[3]);
+                int doctorID = Integer.parseInt(parts[4]);
+                int roomID = Integer.parseInt(parts[5]);
+                LocalDateTime appointmentTime = LocalDateTime.parse(parts[6]);
+                String status = parts[7];
+                String appointmentType = parts[8];
+                String priority = parts[9];
+    
+                Appointment appointment = new Appointment(appointmentID, patientID, doctorID, roomID, appointmentTime, status, appointmentType, priority);
+                appointmentDAO.updateAppointment(appointment); // Persist changes to the database
+                System.out.println("Appointment updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid datetime format for appointmentTime. Please use YYYY-MM-DDTHH:mm:ss");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update appointment <id> <field> <value> OR update appointment <id> <patientID> <doctorID> <roomID> <appointmentTime> <status> <appointmentType> <priority>");
+        }
+    }
+    
+    private void updateBill(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int billID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Bill bill = billDAO.getBillByID(billID);
+                if (bill == null) {
+                    System.out.println("Bill not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "admissionid":
+                        bill.setAdmissionID(Integer.parseInt(value));
+                        break;
+                    case "patientid":
+                        bill.setPatientID(Integer.parseInt(value));
+                        break;
+                    case "billdate":
+                        bill.setBillDate(LocalDate.parse(value));
+                        break;
+                    case "totalamount":
+                        bill.setTotalAmount(Double.parseDouble(value));
+                        break;
+                    case "paymentstatus":
+                        bill.setPaymentStatus(value);
+                        break;
+                    case "paymentmethod":
+                        bill.setPaymentMethod(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Bill.");
+                        return;
+                }
+    
+                billDAO.updateBill(bill); // Persist changes to the database
+                System.out.println("Bill updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs and totalAmount.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for billDate. Please use YYYY-MM-DD.");
+            }
+        } else if (parts.length == 9) { // Adjusted for 8 data fields + ID
+            // Update all fields
+            try {
+                int billID = Integer.parseInt(parts[2]);
+                int admissionID = Integer.parseInt(parts[3]);
+                int patientID = Integer.parseInt(parts[4]);
+                LocalDate billDate = LocalDate.parse(parts[5]);
+                double totalAmount = Double.parseDouble(parts[6]);
+                String paymentStatus = parts[7];
+                String paymentMethod = parts[8];
+    
+                Bill bill = new Bill(billID, admissionID, patientID, billDate, totalAmount, paymentStatus, paymentMethod);
+                billDAO.updateBill(bill); // Persist changes to the database
+                System.out.println("Bill updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs and totalAmount.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for billDate. Please use YYYY-MM-DD.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update bill <id> <field> <value> OR update bill <id> <admissionID> <patientID> <billDate> <totalAmount> <paymentStatus> <paymentMethod>");
+        }
+    }
+
+    private void updateDiagnosis(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int diagnosisID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Diagnosis diagnosis = diagnosisDAO.getDiagnosisByID(diagnosisID);
+                if (diagnosis == null) {
+                    System.out.println("Diagnosis not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "diseaseid":
+                        diagnosis.setDiseaseID(Integer.parseInt(value));
+                        break;
+                    case "admissionid":
+                        diagnosis.setAdmissionID(Integer.parseInt(value));
+                        break;
+                    case "admissiontype":
+                        diagnosis.setAdmissionType(value);
+                        break;
+                    case "diagnosisdate":
+                        diagnosis.setDiagnosisDate(LocalDate.parse(value));
+                        break;
+                    case "severity":
+                        diagnosis.setSeverity(value);
+                        break;
+                    case "status":
+                        diagnosis.setStatus(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Diagnosis.");
+                        return;
+                }
+    
+                diagnosisDAO.updateDiagnosis(diagnosis); // Persist changes to the database
+                System.out.println("Diagnosis updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for diagnosisDate. Please use YYYY-MM-DD.");
+            }
+        } else if (parts.length == 9) { // Adjusted for 8 data fields + ID
+            // Update all fields
+            try {
+                int diagnosisID = Integer.parseInt(parts[2]);
+                int diseaseID = Integer.parseInt(parts[3]);
+                int admissionID = Integer.parseInt(parts[4]);
+                String admissionType = parts[5];
+                LocalDate diagnosisDate = LocalDate.parse(parts[6]);
+                String severity = parts[7];
+                String status = parts[8];
+    
+                Diagnosis diagnosis = new Diagnosis(diagnosisID, diseaseID, admissionID, admissionType, diagnosisDate, severity, status);
+                diagnosisDAO.updateDiagnosis(diagnosis); // Persist changes to the database
+                System.out.println("Diagnosis updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for diagnosisDate. Please use YYYY-MM-DD.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update diagnosis <id> <field> <value> OR update diagnosis <id> <diseaseID> <admissionID> <admissionType> <diagnosisDate> <severity> <status>");
+        }
+    }
+    
+    private void updateDisease(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int diseaseID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Disease disease = diseaseDAO.getDiseaseByID(diseaseID);
+                if (disease == null) {
+                    System.out.println("Disease not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "name":
+                        disease.setName(value);
+                        break;
+                    case "category":
+                        disease.setCategory(value);
+                        break;
+                    case "icdcode":
+                        disease.setIcdCode(value);
+                        break;
+                    case "description":
+                        disease.setDescription(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Disease.");
+                        return;
+                }
+    
+                diseaseDAO.updateDisease(disease); // Persist changes to the database
+                System.out.println("Disease updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid disease ID. Please enter a number.");
+            }
+        } else if (parts.length == 7) { // Adjusted for 6 data fields + ID
+            // Update all fields
+            try {
+                int diseaseID = Integer.parseInt(parts[2]);
+                String name = parts[3];
+                String category = parts[4];
+                String icdCode = parts[5];
+                String description = parts[6];
+    
+                Disease disease = new Disease(diseaseID, name, category, icdCode, description);
+                diseaseDAO.updateDisease(disease); // Persist changes to the database
+                System.out.println("Disease updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid disease ID. Please enter a number.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update disease <id> <field> <value> OR update disease <id> <name> <category> <icdCode> <description>");
+        }
+    }
+    
+    private void updateLabActivity(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int labActivityID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                LabActivity labActivity = labActivityDAO.getLabActivityByID(labActivityID);
+                if (labActivity == null) {
+                    System.out.println("Lab Activity not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "labrequestid":
+                        labActivity.setLabRequestID(Integer.parseInt(value));
+                        break;
+                    case "labstaffid":
+                        labActivity.setLabStaffID(Integer.parseInt(value));
+                        break;
+                    case "starttime":
+                        labActivity.setStartTime(LocalDateTime.parse(value));
+                        break;
+                    case "endtime":
+                        labActivity.setEndTime(LocalDateTime.parse(value));
+                        break;
+                    case "activitytype":
+                        labActivity.setActivityType(value);
+                        break;
+                    case "complexity":
+                        labActivity.setComplexity(Integer.parseInt(value));
+                        break;
+                    case "status":
+                        labActivity.setStatus(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Lab Activity.");
+                        return;
+                }
+    
+                labActivityDAO.updateLabActivity(labActivity); // Persist changes to the database
+                System.out.println("Lab Activity updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs and complexity.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid datetime format for startTime or endTime. Please use YYYY-MM-DDTHH:mm:ss");
+            }
+        } else if (parts.length == 10) { // Adjusted for 9 data fields + ID
+            // Update all fields
+            try {
+                int labActivityID = Integer.parseInt(parts[2]);
+                int labRequestID = Integer.parseInt(parts[3]);
+                int labStaffID = Integer.parseInt(parts[4]);
+                LocalDateTime startTime = LocalDateTime.parse(parts[5]);
+                LocalDateTime endTime = LocalDateTime.parse(parts[6]);
+                String activityType = parts[7];
+                int complexity = Integer.parseInt(parts[8]);
+                String status = parts[9];
+    
+                LabActivity labActivity = new LabActivity(labActivityID, labRequestID, labStaffID, startTime, endTime, activityType, complexity, status);
+                labActivityDAO.updateLabActivity(labActivity); // Persist changes to the database
+                System.out.println("Lab Activity updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs and complexity.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid datetime format for startTime or endTime. Please use YYYY-MM-DDTHH:mm:ss");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update labactivity <id> <field> <value> OR update labactivity <id> <labRequestID> <labStaffID> <startTime> <endTime> <activityType> <complexity> <status>");
+        }
+    }
+
+    private void updateLabRequest(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int labRequestID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                LabRequest labRequest = labRequestDAO.getLabRequestByID(labRequestID);
+                if (labRequest == null) {
+                    System.out.println("Lab Request not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "patientid":
+                        labRequest.setPatientID(Integer.parseInt(value));
+                        break;
+                    case "doctorid":
+                        labRequest.setDoctorID(Integer.parseInt(value));
+                        break;
+                    case "laboratoryid":
+                        labRequest.setLaboratoryID(Integer.parseInt(value));
+                        break;
+                    case "requestdate":
+                        labRequest.setLabRequestDate(LocalDateTime.parse(value));
+                        break;
+                    case "cost":
+                        labRequest.setCost(Double.parseDouble(value));
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Lab Request.");
+                        return;
+                }
+    
+                labRequestDAO.updateLabRequest(labRequest);
+                System.out.println("Lab Request updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs and cost.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for requestDate. Please use YYYY-MM-DD.");
+            }
+        } else if (parts.length == 8) {
+            // Update all fields
+            try {
+                int labRequestID = Integer.parseInt(parts[2]);
+                int patientID = Integer.parseInt(parts[3]);
+                int doctorID = Integer.parseInt(parts[4]);
+                int laboratoryID = Integer.parseInt(parts[5]);
+                LocalDateTime requestDate = LocalDateTime.parse(parts[6]);
+                double cost = Double.parseDouble(parts[7]);
+    
+                LabRequest labRequest = new LabRequest(labRequestID, patientID, doctorID, laboratoryID, requestDate, cost);
+                labRequestDAO.updateLabRequest(labRequest);
+                System.out.println("Lab Request updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs and cost.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for requestDate. Please use YYYY-MM-DD.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update labrequest <id> <field> <value> OR update labrequest <id> <patientID> <doctorID> <laboratoryID> <requestDate> <cost>");
+        }
+    }
+
+    private void updateLabStaff(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int labStaffID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                LabStaff labStaff = labStaffDAO.getLabStaffByID(labStaffID);
+                if (labStaff == null) {
+                    System.out.println("Lab Staff not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "laboratoryid":
+                        labStaff.setLaboratoryID(Integer.parseInt(value));
+                        break;
+                    case "name":
+                        labStaff.setName(value);
+                        break;
+                    case "role":
+                        labStaff.setRole(value);
+                        break;
+                    case "shift":
+                        labStaff.setShift(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Lab Staff.");
+                        return;
+                }
+    
+                labStaffDAO.updateLabStaff(labStaff);
+                System.out.println("Lab Staff updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid lab staff ID. Please enter a number.");
+            }
+        } else if (parts.length == 7) {
+            // Update all fields
+            try {
+                int labStaffID = Integer.parseInt(parts[2]);
+                int laboratoryID = Integer.parseInt(parts[3]);
+                String name = parts[4];
+                String role = parts[5];
+                String shift = parts[6];
+    
+                LabStaff labStaff = new LabStaff(labStaffID, laboratoryID, name, role, shift);
+                labStaffDAO.updateLabStaff(labStaff);
+                System.out.println("Lab Staff updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid lab staff ID or laboratory ID. Please enter numbers.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update labstaff <id> <field> <value> OR update labstaff <id> <laboratoryID> <name> <role> <shift>");
+        }
+    }
+
+    private void updateMaintenance(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int maintenanceID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Maintenance maintenance = maintenanceDAO.getMaintenanceByID(maintenanceID);
+                if (maintenance == null) {
+                    System.out.println("Maintenance not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "roomid":
+                        maintenance.setRoomID(Integer.parseInt(value));
+                        break;
+                    case "scheduledate":
+                        maintenance.setScheduleDate(LocalDateTime.parse(value));
+                        break;
+                    case "completiondate":
+                        maintenance.setCompletionDate(LocalDateTime.parse(value));
+                        break;
+                    case "status":
+                        maintenance.setStatus(value);
+                        break;
+                    case "notes":
+                        maintenance.setNotes(value);
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Maintenance.");
+                        return;
+                }
+    
+                maintenanceDAO.updateMaintenance(maintenance);
+                System.out.println("Maintenance updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid maintenance ID or room ID. Please enter numbers.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid datetime format for scheduleDate or completionDate. Please use YYYY-MM-DDTHH:mm:ss");
+            }
+        } else if (parts.length == 8) {
+            // Update all fields
+            try {
+                int maintenanceID = Integer.parseInt(parts[2]);
+                int roomID = Integer.parseInt(parts[3]);
+                LocalDateTime scheduleDate = LocalDateTime.parse(parts[4]);
+                LocalDateTime completionDate = LocalDateTime.parse(parts[5]);
+                String status = parts[6];
+                String notes = parts[7];
+    
+                Maintenance maintenance = new Maintenance(maintenanceID, roomID, scheduleDate, completionDate, status, notes);
+                maintenanceDAO.updateMaintenance(maintenance);
+                System.out.println("Maintenance updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid maintenance ID or room ID. Please enter numbers.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid datetime format for scheduleDate or completionDate. Please use YYYY-MM-DDTHH:mm:ss");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update maintenance <id> <field> <value> OR update maintenance <id> <roomID> <scheduleDate> <completionDate> <status> <notes>");
+        }
+    }
+    
+    private void updateTreatment(String[] parts) {
+        if (parts.length == 5) {
+            // Update a single field
+            try {
+                int treatmentID = Integer.parseInt(parts[2]);
+                String field = parts[3];
+                String value = parts[4];
+    
+                Treatment treatment = treatmentDAO.getTreatmentByID(treatmentID);
+                if (treatment == null) {
+                    System.out.println("Treatment not found.");
+                    return;
+                }
+    
+                switch (field.toLowerCase()) {
+                    case "patientid":
+                        treatment.setPatientID(Integer.parseInt(value));
+                        break;
+                    case "doctorid":
+                        treatment.setDoctorID(Integer.parseInt(value));
+                        break;
+                    case "roomid":
+                        treatment.setRoomID(Integer.parseInt(value));
+                        break;
+                    case "admissiondate":
+                        treatment.setAdmissionDate(LocalDate.parse(value));
+                        break;
+                    case "treatmenttype":
+                        treatment.setTreatmentType(value);
+                        break;
+                    case "description":
+                        treatment.setDescription(value);
+                        break;
+                    case "cost":
+                        treatment.setCost(Double.parseDouble(value));
+                        break;
+                    default:
+                        System.out.println("Invalid field name for Treatment.");
+                        return;
+                }
+    
+                treatmentDAO.updateTreatment(treatment);
+                System.out.println("Treatment updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs and cost.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for admissionDate. Please use YYYY-MM-DD.");
+            }
+        } else if (parts.length == 10) {
+            // Update all fields
+            try {
+                int treatmentID = Integer.parseInt(parts[2]);
+                int patientID = Integer.parseInt(parts[3]);
+                int doctorID = Integer.parseInt(parts[4]);
+                int roomID = Integer.parseInt(parts[5]);
+                LocalDate admissionDate = LocalDate.parse(parts[6]);
+                String treatmentType = parts[7];
+                String description = parts[8];
+                double cost = Double.parseDouble(parts[9]);
+    
+                Treatment treatment = new Treatment(treatmentID, patientID, doctorID, roomID, admissionDate, treatmentType, description, cost);
+                treatmentDAO.updateTreatment(treatment);
+                System.out.println("Treatment updated successfully.");
+    
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter numbers for IDs and cost.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format for admissionDate. Please use YYYY-MM-DD.");
+            }
+        } else {
+            System.out.println(INVALID_COMMAND_FORMAT + " Usage: update treatment <id> <field> <value> OR update treatment <id> <patientID> <doctorID> <roomID> <admissionDate> <treatmentType> <description> <cost>");
+        }
+    }
+ 
+
     private void handleCreateCommand(String[] parts) {
         if (parts.length < 2) {
             System.out.println(INVALID_COMMAND_FORMAT + " Usage: create <entity> <data>");
