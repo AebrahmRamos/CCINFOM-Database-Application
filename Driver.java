@@ -100,7 +100,7 @@ public class Driver {
                 handleDeleteCommand(parts);
                 break;
             case "admit":
-                // handleAdmitCommand(parts);
+                handleAdmitCommand(parts);
                 break;
             case "treat":
                 handleTreatCommand(parts);
@@ -1289,6 +1289,27 @@ private void deleteTreatment(int treatmentID) {
                 System.out.println("Invalid entity type.");
         }
     }
+
+     private void handleAdmitCommand(String[] parts) {
+	   int id;
+	   if (parts.length > 8) {
+           System.out.println(INVALID_COMMAND_FORMAT + " Usage: admit <patientID> <roomID> <doctorID> <yyyy-MM-dd> <admissionType> <admissionStatus");
+           return;
+       }
+	   
+	   id = Integer.parseInt(parts[1]);
+       int patientID = id;
+       id = Integer.parseInt(parts[2]);
+       int roomID = id;
+       id = Integer.parseInt(parts[3]);
+       int doctorID = id;
+       LocalDate admissionDate = LocalDate.parse(parts[4]);
+       String admissionType = parts[5];
+       String admissionStatus = parts[6]; 
+   
+       Admission admission = new Admission(1, patientID, roomID, doctorID, admissionDate, admissionType, admissionStatus);
+       admissionDAO.createAdmission(admission);
+   }
 
     private void handleTreatCommand(String[] parts) {
     	Scanner scanner = new Scanner(System.in);
