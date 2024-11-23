@@ -53,4 +53,10 @@ public class Doctor {
         this.deparmtent = deparmtent;
     }
 
+    @Override
+    public String toString() {
+        return "Doctor [doctorID=" + doctorID + ", firstname=" + firstname + ", lastname=" + lastname
+                + ", specialization=" + specialization + ", deparmtent=" + deparmtent + "]";
+    }
+
 }

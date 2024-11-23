@@ -33,5 +33,11 @@ public class Laboratory {
         this.contactNumber = contactNumber;
     }
 
+    @Override
+    public String toString() {
+        return "Laboratory [laboratoryID=" + laboratoryID + ", laboratoryName=" + laboratoryName + ", contactNumber="
+                + contactNumber + "]";
+    }
+
 
 }

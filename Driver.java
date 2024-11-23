@@ -1647,7 +1647,7 @@ private void handleUpdateCommand(String[] parts) {
         if (laboratory == null) {
             System.out.println("Laboratory not found.");
         } else {
-            System.out.println("Laboratory Name: " + laboratory.getLaboratoryName());
+            System.out.println(laboratory);
         }
     }
     
