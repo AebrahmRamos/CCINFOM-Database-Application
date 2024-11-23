@@ -1,0 +1,101 @@
+# Hospital Management System (CLI)
+
+This is a command-line interface (CLI) based hospital management system built using Java and MySQL. It provides functionalities for managing various aspects of a hospital, including patients, doctors, rooms, laboratories, admissions, treatments, billing, and reporting.
+
+## Features
+
+*   Patient management (create, read, update, delete)
+*   Doctor management (create, read, update, delete)
+*   Room management (create, read, update, delete)
+*   Laboratory management (create, read, update, delete)
+*   Admission of patients (in-patient and out-patient)
+*   Treatment scheduling and management
+*   Lab request creation and management
+*   Patient discharge and billing
+*   Report generation (disease activity, doctor productivity, ER productivity, laboratory productivity)
+
+## Technologies Used
+
+*   Java
+*   MySQL
+*   JDBC (Java Database Connectivity)
+
+## Database Schema
+
+The system uses a MySQL database with the following tables:
+
+*   Patient
+*   Doctor
+*   Room
+*   Laboratory
+*   Admission
+*   Treatment
+*   Appointment
+*   Bill
+*   Diagnosis
+*   Disease
+*   LabActivity
+*   LabRequest
+*   LabStaff
+*   Maintenance
+
+## Available Commands
+
+### General
+
+*   `help [command]` - Displays help information for all commands or a specific command.
+*   `exit` - Quits the program.
+
+### CRUD Operations
+
+*   `create <entity> <data>` - Creates a new entity.
+    *   Supported entities: `patient`, `doctor`, `room`, `laboratory`
+    *   Example: `create patient John Doe 1990-01-01 HMO-A "No allergies"`
+*   `read <entity> <id>` - Reads the details of an entity by ID.
+    *   Supported entities: `patient`, `doctor`, `room`, `laboratory`, `admission`, `appointment`, `bill`, `diagnosis`, `disease`, `labactivity`, `labrequest`, `labstaff`, `maintenance`, `treatment`
+    *   Example: `read patient 1`
+*   `update <entity> <id> <data>` - Updates an existing entity.
+    *   Supported entities: `patient`, `doctor`, `room`, `laboratory`
+    *   Example: `update patient 1 Jane Doe 1991-01-01 HMO-B "No known allergies"`
+*   `delete <entity> <id>` - Deletes an entity by ID.
+    *   Supported entities: `patient`, `doctor`, `room`, `laboratory`
+    *   Example: `delete patient 1`
+*   `list <entity>` - Lists all entities of a given type.
+    *   Supported entities: `patient`, `doctor`, `room`, `laboratory`, `admission`, `appointment`, `bill`, `diagnosis`, `disease`, `labactivity`, `labrequest`, `labstaff`, `maintenance`, `treatment`
+    *   Example: `list patient`
+
+### Transactions
+
+*   `admit <admissionType> <patientID> <roomID> <doctorID> <admissionDate> <status>` - Admits a patient.
+    *   `admissionType`: `in-patient` or `out-patient`
+    *   Example: `admit in-patient 1 101 5 2024-11-23 Admitted`
+*   `treat <patientID> <doctorID> <treatmentDate> <treatmentType> <description> <cost>` - Schedules a treatment for a patient.
+    *   Example: `treat 1 5 2024-11-24 "Check-up" "General check-up" 100.00`
+*   `request <patientID> <doctorID> <laboratoryID> <requestDate> <cost>` - Creates a lab request for a patient.
+    *   Example: `request 1 5 1 2024-11-23 50.00`
+*   `discharge <admissionID>` - Discharges a patient.
+    *   Example: `discharge 123`
+
+### Reports
+
+*   `generate report <report_type> <arguments>` - Generates a report.
+    *   Supported report types:
+        *   `disease-activity <month> <year>`
+        *   `doctor-productivity <month> <year>`
+        *   `er-productivity <month> <year>`
+        *   `laboratory <month> <year>`
+    *   Example: `generate report laboratory 11 2024`
+
+## How to Run
+
+1.  Ensure you have MySQL installed and running.
+2.  Create the database schema using the provided SQL script.
+3.  Populate the database with initial data (if needed).
+4.  Compile and run the Java code.
+5.  Interact with the CLI using the available commands.
+
+## Future Enhancements
+
+*   Implement more advanced features (e.g., user authentication, more complex reports).
+*   Improve the CLI interface (e.g., command autocompletion, better error handling).
+*   Add a graphical user interface (GUI) for a more user-friendly experience.
